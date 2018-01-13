@@ -1,0 +1,10 @@
+/bin
+/log
+/logarchive
+/build
+/ide_bin
+/.gradle
+/.idea
+/classes
+/fileStore
+/out
