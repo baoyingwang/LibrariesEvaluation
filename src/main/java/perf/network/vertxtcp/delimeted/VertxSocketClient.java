@@ -30,11 +30,11 @@ public class VertxSocketClient {
         Vertx vertx = Vertx.vertx();
 
         NetClientOptions options = new NetClientOptions()
-                .setConnectTimeout(10000);
-                //.setTcpNoDelay(true);
+                .setConnectTimeout(10000)
+                .setTcpNoDelay(true);
         NetClient client = vertx.createNetClient(options);
 
-        
+
 
         AtomicInteger counter = new AtomicInteger(0);
 

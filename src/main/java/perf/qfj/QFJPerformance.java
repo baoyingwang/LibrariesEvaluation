@@ -20,6 +20,8 @@ public class QFJPerformance {
 
         String messageData = fixMessage;
         DataDictionary dd = new DataDictionary("FIX50SP1.xml");
+
+        //if false, checksum(and maybe others) will NOT be validated.
         boolean doValidation = true;
 
         int loopCount = 1000_000;
