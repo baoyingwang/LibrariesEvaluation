@@ -33,7 +33,7 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
     }
     compile("org.springframework.boot:spring-boot-starter-log4j2:+")
-
+ 
     compile("org.quickfixj:quickfixj-core:2.0.0")
 
     compile group: 'com.beust', name: 'jcommander', version: '1.72' //http://jcommander.org/ https://mvnrepository.com/artifact/com.beust/jcommander/1.72
