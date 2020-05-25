@@ -4,7 +4,7 @@
   <parent>
     <artifactId>LibEvaluation</artifactId>
     <groupId>baoying</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
   </parent>
 
   <!-- <groupId>baoying</groupId>  与parent共享groupId和version-->
