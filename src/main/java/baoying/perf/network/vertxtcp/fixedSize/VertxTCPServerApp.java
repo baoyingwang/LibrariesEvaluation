@@ -1,4 +1,4 @@
-package perf.network.vertxtcp.delimeted;
+package baoying.perf.network.vertxtcp.fixedSize;
 
 
 import io.vertx.core.Vertx;
@@ -8,9 +8,9 @@ import io.vertx.core.net.NetServerOptions;
 import io.vertx.core.parsetools.RecordParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import perf.network.Benchmarker;
-import perf.network.SystemUtils;
-import perf.network.vertxtcp.VertxUtil;
+import baoying.perf.network.Benchmarker;
+import baoying.perf.network.SystemUtils;
+import baoying.perf.network.vertxtcp.VertxUtil;
 
 
 public class VertxTCPServerApp {
@@ -29,12 +29,12 @@ public class VertxTCPServerApp {
                 .setTcpNoDelay(true)
                 .setAcceptBacklog(128)
                 .setTcpKeepAlive(true);
-        NetServer server = vertx.createNetServer(options);
+        NetServer server = vertx.createNetServer();
 
         server.connectHandler(socket -> {
 
             //http://vertx.io/docs/vertx-core/java/#_record_parser
-            final RecordParser parser = RecordParser.newDelimited(SystemUtils.delimiter(), buffer -> {
+            final RecordParser parser = RecordParser.newFixed(_msgSize, buffer -> {
 
                 long clientSendTime =  buffer.getLong(0);
                 if(clientSendTime > 0 ){
@@ -43,14 +43,14 @@ public class VertxTCPServerApp {
 
                     bench.measure(svrTime-clientSendTime);
 
-                    Buffer svrB = VertxUtil.getB(svrTime,clientSendTime, _msgSize, SystemUtils.delimiter());
+                    Buffer svrB = VertxUtil.getB(svrTime,clientSendTime, _msgSize);
                     socket.write(svrB);
 
                 }else if(clientSendTime == -1){
                     //first, ignore
                 }else if(clientSendTime == -2){
 
-                    Buffer svrB = VertxUtil.getB(-1,_msgSize, SystemUtils.delimiter());
+                    Buffer svrB = VertxUtil.getB(-1,_msgSize);
                     socket.write(svrB);
 
                     StringBuilder results = new StringBuilder();

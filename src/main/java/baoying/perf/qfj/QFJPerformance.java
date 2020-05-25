@@ -1,4 +1,4 @@
-package perf.qfj;
+package baoying.perf.qfj;
 
 
 import org.junit.Test;

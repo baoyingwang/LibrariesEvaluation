@@ -6,10 +6,23 @@
 2. pom.xml中增加了解决@javax.annotation.Generated问题的dependency - tomcat
   - 参考https://stackoverflow.com/questions/59079616/generated-protoc-file-creates-a-target-source-with-error
 
-真正的项目中
-1. server: proto文件于server放在一起源代码管理
-2. proto文件作为release的一个单独部分拿出来，给client使用
-3. client拿着带版本的proto文件，自己编译成java代码或者别的代码，因为理论上client可以是任何语言
+开发中的代码方案
+方案0 - server/proto文件/client都在一个项目中
+- 简单方便，但是都揉在一起，项目早起可以这么做，快速做出原型，尤其是1个人负责所有事情的时候
+- 一旦增加人手，则有必要把client代码，甚至proto文件也分离出去，这样分别开发
+
+方案1 - server与proto文件放在同一个项目中，一起release；client为自己的项目
+- server: proto文件于server放在一起源代码管理
+- proto文件作为release的一个单独部分拿出来，给client使用
+- client拿着带版本的proto文件，自己编译成java代码或者别的代码，因为理论上client可以是任何语言
+方案1.2 - server/proto文件/client都是各自的项目，各自编号
+- 更合理的安排是proto文件单独一个项目，自己的版本号，则server通过版本号完成依赖
+- client 也通过proto文件版本号，这样如果只是server自己bug fix而proto没变，client不必做任何更改
+- 不过这样多引入了一个项目，管理复杂度上升
+
+方案2 - 为了避免多个项目的问题，可以使用maven的sub module方式，把server/client/proto文件分成3个sub module
+
+
 
 注意：为何不把proto编译完的java代码交给client使用？因为
 - client可以是非java项目

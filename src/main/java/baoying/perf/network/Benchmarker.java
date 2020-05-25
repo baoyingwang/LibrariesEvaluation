@@ -1,4 +1,4 @@
-package perf.network;
+package baoying.perf.network;
 
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
@@ -37,7 +37,7 @@ public class Benchmarker {
         double avgNS = sum.get()*1.0/total;
         String r =  "";
         r +="avg latency(us):" + String.format("%.8f",sum.get() * 1.0/(total*1000)) +" ";
-        r +="speed(perf second): " + String.format("%.2f",total/durationInSecond)
+        r +="speed(baoying.perf second): " + String.format("%.2f",total/durationInSecond)
                 +" took:"+ durationInSecond+" seconds"
                 +" total:" + total +" ";
 

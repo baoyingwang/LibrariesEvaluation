@@ -1,6 +1,5 @@
-package jvm.assembly;
+package baoying.jvm.assembly;
 
-//TODO move to library evaluation project
 //print assembly, by
 //     java -cp . -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp -XX:CompileCommand=dontinline,basic/SimpleSum.* -XX:CompileCommand=compileonly,basic/SimpleSum.* basic.SimpleSum
 //print bytecode, by:

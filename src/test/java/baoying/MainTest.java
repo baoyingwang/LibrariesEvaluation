@@ -1,3 +1,6 @@
+package baoying;
+
+import baoying.Main;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -7,9 +10,9 @@ import static org.junit.Assert.*;
  *
  * @author U0127650, @date 1/13/18 3:13 PM
  */
-public class LibraryTest {
+public class MainTest {
     @Test public void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
+        Main classUnderTest = new Main();
         assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
 }

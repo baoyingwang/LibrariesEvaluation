@@ -1,4 +1,4 @@
-package perf.network.netty;
+package baoying.perf.network.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -6,7 +6,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import perf.network.SystemUtils;
+import baoying.perf.network.SystemUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
