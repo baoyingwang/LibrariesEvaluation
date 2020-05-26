@@ -69,6 +69,37 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+
+        <!-- https://stackoverflow.com/questions/4725668/how-to-deploy-snapshot-with-sources-and-javadoc -->
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.2.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>install</phase>
+              <goals><goal>jar-no-fork</goal></goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.2.0</version>
+          <!--
+          不得不manual加上这个，因为maven javadoc plugin暂时不那么智能，无法识别设定的JAVA_HOME
+          https://stackoverflow.com/questions/13961615/unable-to-find-javadoc-command-maven
+          -->
+          <configuration>
+            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+          </configuration>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <phase>install</phase>
+              <goals><goal>jar</goal></goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

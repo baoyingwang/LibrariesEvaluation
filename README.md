@@ -13,6 +13,8 @@
   - module之间相互依赖的例子包括
     - eval-grpc-server/eval-grpc-client 都依赖于 eval-grpc-proto
     - eval-vertx 依赖于eval-common 和 eval-perf
+  - 解决无法上传javadoc和source问题，通过定义他们于install phase， 避免了deploy时候他们还没有执行
+    - 参考pom.xml, eval-common/pom.xml, eval-vertx/pom.xml
   - note：eval-common的引入是为了那些公用的代码和dependency
     - 目前只有logging的dependency定义在了eval-common中  
     - 没有把这些东西放在Parent里面，这事情见仁见智吧
