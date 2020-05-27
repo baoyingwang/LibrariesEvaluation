@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>LibEvaluation</artifactId>
+    <groupId>baoying</groupId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>eval-spring</artifactId>
+  <name>eval-spring</name>
+
+
+  <properties>
+    <spring.version>2.2.2.RELEASE</spring.version>
+  </properties>
+
+  <dependencies>
+
+    <!--
+    只用spring自己的spring-boot-starter-log4j2就行了
+    主要是为了logging
+    <dependency>
+      <groupId>baoying</groupId>
+      <artifactId>eval-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    -->
+
+    <!-- https://spring.io/guides/gs/spring-boot/ -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring.version}</version>
+      <exclusions>
+
+        <!-- log4j2 与springboot冲突-
+        记得添加 spring-boot-starter-log4j2
+        https://www.callicoder.com/spring-boot-log4j-2-example/
+        https://www.cnblogs.com/xishuai/p/spring-boot-log4j2.html
+        https://stackoverflow.com/questions/46555617/log4j2-not-working-in-spring-boot-application -->
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <version>${spring.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <!-- getting/setter/ etc-->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.12</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
