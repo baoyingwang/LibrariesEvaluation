@@ -7,18 +7,16 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>eval-grpc-server</artifactId>
+  <artifactId>eval-grpc</artifactId>
+  <name>eval-grpc</name>
 
-  <name>eval-grpc-server</name>
+  <!-- packaging:pom 创建项目后，manual添加-->
+  <packaging>pom</packaging>
 
-
-  <dependencies>
-    <dependency>
-      <groupId>baoying</groupId>
-      <artifactId>eval-grpc-proto</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-  </dependencies>
-
+  <modules>
+    <module>eval-grpc-allinone</module>
+    <module>eval-grpc-client</module>
+    <module>eval-grpc-proto</module>
+    <module>eval-grpc-server</module>
+  </modules>
 </project>

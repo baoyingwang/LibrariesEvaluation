@@ -3,11 +3,15 @@
     - HelloController - done - copy/paste
     - OrderController - 稍微复杂了一点，更实用了一些
       - TODO， 增加更改/Put的例子
+      - TODO，增加类似于swagger那样的REST文档
   - logging
-    - 打印所有requests/response 
+    - 打印所有requests/response  - see: logging.LogAllRequests.java, and logging.LogAllResponses.java
       - TODO requests好像打印了两遍，需要调查
-    - 给每个请求增加一个uuid，并打印到log种
-    - 使用log4j2，而非默认的logback
+    - 给每个请求增加一个uuid，并打印到log中 - see：logging.LogUniqueIDPerRequest.java
+    - 使用log4j2，而非默认的logback - see - pom.xml中exclude spring自身logging，和增加的log4j2.xml例子
+  - 返回码 - 见returnhandle package
+    - package里面有个spring-errorcode.md详细描述了REST接口的返回原则和例子等等
+    - 还没有完全做完
     
 - TODO
   - 认证

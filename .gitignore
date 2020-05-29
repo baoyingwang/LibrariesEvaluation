@@ -10,5 +10,5 @@
 /out
 /target
 /.DS_Store
-/*/target/*
-/*/log/*
+/**/target/*
+/**/log/*

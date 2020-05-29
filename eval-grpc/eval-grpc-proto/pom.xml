@@ -2,15 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <artifactId>LibEvaluation</artifactId>
+    <artifactId>eval-grpc</artifactId>
     <groupId>baoying</groupId>
     <version>${revision}</version>
   </parent>
 
-  <artifactId>eval-grpc-allinone</artifactId>
+
+  <artifactId>eval-grpc-proto</artifactId>
+  <name>eval-grpc-proto</name>
 
 
   <dependencies>
+
     <!-- gRPC -->
     <dependency>
       <groupId>io.grpc</groupId>
@@ -36,21 +39,9 @@
       <!-- Generated has @Retention(SOURCE), so not needed at runtime -->
       <scope>provided</scope>
     </dependency>
-
   </dependencies>
 
   <build>
-
-  <!-- gRPC - 为了integrate时候自动编译protocolbug文件，引入build下面的各个extension/plugin
-    https://www.baeldung.com/grpc-introduction -->
-    <extensions>
-      <extension>
-        <groupId>kr.motd.maven</groupId>
-        <artifactId>os-maven-plugin</artifactId>
-        <version>1.6.1</version>
-      </extension>
-    </extensions>
-
     <plugins>
       <!-- gPRC - 为了integrate时候自动编译protocolbug文件，引入build下面的各个extension/plugin
 https://www.baeldung.com/grpc-introduction -->
@@ -76,35 +67,6 @@ https://www.baeldung.com/grpc-introduction -->
           </execution>
         </executions>
       </plugin>
-
-      <!-- 把结果打成一个大的executed jar - 还有好几种方式： https://www.baeldung.com/executable-jar-with-maven -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <archive>
-                <manifest>
-                  <mainClass>
-                    baoying.Main
-                  </mainClass>
-                </manifest>
-              </archive>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
-
   </build>
-
 </project>

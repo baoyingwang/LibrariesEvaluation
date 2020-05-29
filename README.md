@@ -1,6 +1,8 @@
 # 项目介绍
 - 对library的评估代码都讲放入本项目
 - 如果某些方面比较重要可以/应该独立，则拉出来独立项目，譬如QuickfFixJ
+- TODO
+  - Mock - 1)mockito, 2)easymock/powermock
 
 # 其他
 - 本项目自身组织，可以作为maven module的一个例子

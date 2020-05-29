@@ -104,10 +104,7 @@
     </pluginManagement>
   </build>
   <modules>
-    <module>eval-grpc-allinone</module>
-    <module>eval-grpc-server</module>
-    <module>eval-grpc-client</module>
-    <module>eval-grpc-proto</module>
+    <module>eval-grpc</module>
     <module>eval-perf</module>
     <module>eval-JDK</module>
     <module>eval-vertx</module>
@@ -115,6 +112,7 @@
     <module>eval-qfj</module>
     <module>eval-common</module>
     <module>eval-spring</module>
+    <module>eval-python</module>
   </modules>
   <!-- manual 添加 - 上传到远端nexus/maven仓库 - 执行mvn deploy时候-->
   <distributionManagement>

@@ -7,9 +7,8 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>eval-perf</artifactId>
-  <name>eval-perf</name>
+  <artifactId>eval-python</artifactId>
+  <name>eval-python</name>
 
-  <dependencies>
-  </dependencies>
+
 </project>

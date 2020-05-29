@@ -24,7 +24,6 @@
             calculated_px:"",
         }
     }
-
 }
 
 ```
