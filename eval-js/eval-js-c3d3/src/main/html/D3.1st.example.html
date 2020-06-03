@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Graph</title>
+    <style type = "text/css">
+	
+	#chart div {
+	  display: inline-block;
+	  background: #4285F4;
+	  width: 20px;
+	  margin-right: 3px;
+	}
+    </style>
+    <script type="text/javascript" src="script/d3.v3.js"></script>
+</head>
+
+<body>
+    <div id="chart"></div>
+	
+    <script type="text/javascript">
+	d3.select('#chart')
+	  .selectAll("div")
+	  .data([4, 8, 15, 16, 23, 42])
+	  .enter()
+	  .append("div")
+	  .style("height", (d)=> d + "px")
+    </script>
+</body>
+</html>

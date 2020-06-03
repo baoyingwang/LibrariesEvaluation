@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Graph</title>
+    <style type = "text/css">
+	
+	#chart div {
+	  display: inline-block;
+	  background: #4285F4;
+	  width: 20px;
+	  margin-right: 3px;
+	}
+    </style>
+	<link href="css/c3.min.0.4.14.css" rel="stylesheet">
+    <script type="text/javascript" src="script/d3.v3.js"></script>
+	<script src="script/c3.min.0.4.14.js"></script>
+	<script src="script/jquery-3.2.1.js"></script>	
+</head>
+
+<body>
+    <div id="chart"></div>
+	
+	<h2>This is a heading</h2>
+	<p>This is a paragraph.</p>
+	<p>This is another paragraph.</p>
+	<button type="button">Click me</button>
+	
+	<span id="dialog_title_span">'+dialog_title+'</span>
+	
+    <script type="text/javascript">
+	
+		$(document).ready(function(){
+		  $("button").click(function(){
+		  
+			$("p").css("background-color","red");
+			//$("#dialog_title_span").css("background-color","red");
+			$("#dialog_title_span").text("background-color red");
+			
+			$.post("localhost:8080/query_user_session",
+				{
+				  name:"Donald Duck",
+				  city:"Duckburg"
+				},
+				function(data,status){
+				
+				//$("dialog_title_span").text("data:" + data + "\nstatus:" + status);
+					$("#dialog_title_span").text("abcd");
+				});			
+			
+		  });
+		});
+
+		var chart = c3.generate({
+			data: {
+				columns: [
+					['data1', 30, 200, 100, 400, 150, 250],
+					['data2', 50, 20, 10, 40, 15, 25]
+				]
+			}
+		});
+
+		setTimeout(function () {
+			chart.load({
+				columns: [
+					['data1', 230, 190, 300, 500, 300, 400]
+				]
+			});
+		}, 1000);
+
+		setTimeout(function () {
+			chart.load({
+				columns: [
+					['data3', 130, 150, 200, 300, 200, 100]
+				]
+			});
+		}, 1500);
+
+		setTimeout(function () {
+			chart.unload({
+				ids: 'data1'
+			});
+		}, 2000);
+    </script>
+</body>
+</html>

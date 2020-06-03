@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Graph</title>
+    <style type = "text/css">
+	
+	#chart div {
+	  display: inline-block;
+	  background: #4285F4;
+	  width: 20px;
+	  margin-right: 3px;
+	}
+    </style>
+	<link href="css/c3.min.0.4.14.css" rel="stylesheet">
+    <script type="text/javascript" src="script/d3.v3.js"></script>
+	<script src="script/c3.min.0.4.14.js"></script>
+</head>
+
+<body>
+    <div id="chart"></div>
+	
+    <script type="text/javascript">
+var chart = c3.generate({
+    data: {
+		x : time
+        columns: [
+			['time', 'cat1', 'cat2', 'cat3', 'cat4', 'cat5', 'cat6', 'cat7', 'cat8', 'cat9']
+            ['data1', 30, 200, 100, 400, 150, 250, 50, 100, 250]
+        ]
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: x
+        }
+    }
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Graph</title>
+    <style type = "text/css">
+	
+	#chart div {
+	  display: inline-block;
+	  background: #4285F4;
+	  width: 20px;
+	  margin-right: 3px;
+	}
+    </style>
+	<link href="css/c3.min.0.4.14.css" rel="stylesheet">
+    <script type="text/javascript" src="script/d3.v3.js"></script>
+	<script src="script/c3.min.0.4.14.js"></script>
+</head>
+
+<body>
+    <div id="chart"></div>
+	
+    <script type="text/javascript">
+
+var chart = c3.generate({
+    data: {
+        columns: [
+            ['data1', 30, -200, -100, 400, 150, 250],
+            ['data2', -50, 150, -150, 150, -50, -150],
+            ['data3', -100, 100, -40, 100, -150, -50]
+        ],
+        groups: [
+            ['data1', 'data2']
+        ],
+        type: 'bar',
+        labels: {
+//            format: function (v, id, i, j) { return "Default Format"; },
+            format: {
+                //sdata1: d3.format('$'),
+                data1: function (v, id, i, j) { 
+						var result =v;
+						if(i==2){
+							result = "data1 v:"+v +" id:"+id +" i:"+i +" j:"+j+"<br> \n abcd"; 
+						}
+						return result; 
+					},
+				data2: function (v, id, i, j) { return "data2 v:"+v +" id:"+id +" i:"+i +" j:"+j; },
+            }
+        }
+    },
+    grid: {
+        y: {
+            lines: [{value: 0}]
+        }
+    }
+});
+    </script>
+</body>
+</html>

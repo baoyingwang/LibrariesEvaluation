@@ -1,0 +1,1 @@
+java -cp ./log4j-1.2.14.jar;./DalyAckServer.jar tcp.verify.nagle_delayack.DelayAckServer

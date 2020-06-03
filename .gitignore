@@ -12,3 +12,5 @@
 /.DS_Store
 /**/target/*
 /**/log/*
+/venv
+/eval-interview/src/main/python
