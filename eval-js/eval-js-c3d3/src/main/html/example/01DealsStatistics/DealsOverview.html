@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Graph</title>
+    <style type = "text/css">
+	
+	#chart div {
+	  display: inline-block;
+	  background: #4285F4;
+	  width: 20px;
+	  margin-right: 3px;
+	}
+    </style>
+	<link href="css/c3.min.0.4.14.css" rel="stylesheet">
+    <script type="text/javascript" src="script/d3.v3.js"></script>
+	<script src="script/c3.min.0.4.14.js"></script>
+	<script src="script/jquery-3.2.1.js"></script>
+	<script src="script/baoying.chart.v2.js"></script>		
+</head>
+
+<body>
+
+http://localhost:8080/BaoyingDataService/DealsOverview.html
+<!-- 
+<button type="button" id="this_week">THIS WEEK</button>
+<button type="button" id="this_month">THIS MONTH</button>
+<button type="button" id="this_year">THIS YEAR</button>
+-->
+	<p id="chart_container"></p>
+	<p id="console_container"></p>
+
+	<br>
+	<span id="restful_response">'overall_username_response'</span> <br>
+
+    <script type="text/javascript">
+    
+    
+    var _chartContainer="chart_container";
+    var _consoleContainer="console_container";    
+
+	function drawChartsDealCountPerDay(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "ext_deal_datetime_today as deal_date" ,
+			group_by_fields_in_group_by : "ext_deal_datetime_today ",
+			orderBy                     : "deal_date",
+			orderDirection              : "asc"
+		};
+		
+		var category_column_name='DEAL_DATE';
+		var titlePrefix = "Deals Count  per day -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}	
+	
+	function drawChartsDealCountPerExecutionType(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "EXECUTION_TYPE" ,
+			group_by_fields_in_group_by : "EXECUTION_TYPE ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='EXECUTION_TYPE';
+		var titlePrefix = "Deals Count  per execution type -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}	
+	
+	function drawChartsDealCountPerInstrument(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "Instrument||'-'||FX_DEALTYPE as INSTRUMENT" ,
+			group_by_fields_in_group_by : "Instrument||'-'||FX_DEALTYPE ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='INSTRUMENT';
+		var titlePrefix = "Deals Count  per Instrument -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}	
+	
+	function drawChartsDealCountPerOverallBroker(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "case proxy_group_name   when 'a' then 'aaa'     when 'b' then 'bbb'     when 'c' then 'ccc'   else 'InterdealBroker' end as BROKER" ,
+			group_by_fields_in_group_by : "case proxy_group_name   when 'a' then 'aaa'     when 'b' then 'bbb'     when 'c' then 'ccc'   else 'InterdealBroker' end ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='BROKER';
+		var titlePrefix = "Deals Count  per Broker (Overall) -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}		
+	
+		
+	
+	function drawChartsDealCountPerIDB(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "EXT_SOURCE_ORG_NAME as BROKER" ,
+			group_by_fields_in_group_by : "EXT_SOURCE_ORG_NAME",
+			condition_in_where          : "proxy_group_name not in('DPA2', 'MTCH', 'POMS')",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='BROKER';
+		var titlePrefix = "Deals Count  per Broker - ONLY Inter Dealer Broker -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}		
+	
+	function drawChartsDealCountPerTraderOrg(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "EXT_TRADER_ORG_NAME as TRADER_ORG" ,
+			group_by_fields_in_group_by : "EXT_TRADER_ORG_NAME ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='TRADER_ORG';
+		var titlePrefix = "Deals Count  per Trader Org -  ";
+	 	drawMonthlyCharts_ONLY_count(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}	
+	
+	function drawChartsDealCountPerFXTTraderOrgStackingOnSourceOrg(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "EXT_TRADER_ORG_NAME as TRADER_ORG, EXT_SOURCE_ORG_NAME as PLATFORM" ,
+			group_by_fields_in_group_by : "EXT_TRADER_ORG_NAME , EXT_SOURCE_ORG_NAME ",
+			condition_in_where          : "proxy_group_name in('DPA2', 'MTCH')",
+			orderBy                     : "deal_count",
+			topN                        : "100",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='TRADER_ORG';
+		var stacking_column_name='PLATFORM';
+		var titlePrefix = "Deals Count  per Trader Org - Stacking Source -  ";
+
+		var value_1_title       = titlePrefix + " Deal Count  ( " + month + " )";
+	 	//var value_2_title       = titlePrefix + " Deal Volume ( " + month + " )";		
+	 	
+	 	
+	 	var value_1_column_name = 'DEAL_COUNT';
+	 	var value_1_column_tip  = 'value';	 	
+	 	//var value_2_column_name = 'USD_AMOUNT_IN_BILLION';
+	 	//var value_2_column_tip  = 'usd amount in billion';	 	
+	 	
+
+    	var chartContainer = _chartContainer;
+	 	var value_1_ChartDivID    = prepareChartTitleAndDiv(chartContainer, value_1_title);
+	 	//var value_2_ChartDivID    = prepareChartTitleAndDiv(chartContainer, value_2_title);
+	 	
+
+    	$.post(
+    			postUrl,
+    			restfulRequestParams,
+		    	function(restfulResponse,status){
+		    		
+		    		addParagraph( chartContainer,postUrl+" status:"+status+ " response:"+restfulResponse);		    		
+		    		
+		    		var jsonRestfulResponse = JSON.parse(restfulResponse);
+		    		var columnNames = jsonRestfulResponse['columnNames'      ];
+		    		var data        = jsonRestfulResponse['columnName_values'];
+		    		
+		    		var categary_list   = data[category_column_name];
+		    		var stacking_list   = data[stacking_column_name];
+		    		var value_1_list    = data[value_1_column_name];
+		    		
+		    		var chartData_uniqCategaryArray_uniqStackedGroupArray = baoyingLibGenerateC3ChartArrays(data,category_column_name, stacking_column_name,value_1_column_name );
+		    		var c3chartData             = chartData_uniqCategaryArray_uniqStackedGroupArray[0];
+		    		var uniqCategaryArray       = chartData_uniqCategaryArray_uniqStackedGroupArray[1];
+		    		var uniqStackedGroupArray   = chartData_uniqCategaryArray_uniqStackedGroupArray[2];
+		    		
+		    		var chartxxx    = baoyingLibDrawLinesC3Chart("#"+value_1_ChartDivID, c3chartData, uniqCategaryArray   );
+		    		
+		    		
+		    		//var c3value_1_list = value_1_list.slice(0); //make a copy
+		    		//c3value_1_list.unshift(value_1_column_tip)    ; //add the 'value' to head of array
+		    		
+		    		//var c3value_2_list = value_2_list.slice(0); //make a copy
+		    		//c3value_2_list.unshift(value_2_column_tip)    ; //add the 'value' to head of array
+		    		
+		    		//baoyingLibDrawLinesC3Chart('#'+value_1_ChartDivID ,[c3value_1_list],categary_list); //[c2countList] means a matrix
+		    		//baoyingLibDrawLinesC3Chart('#'+value_2_ChartDivID,[c3value_2_list],categary_list);		    		
+		    		    	
+		    	}
+		);  		
+
+	}	
+	
+	function drawChartsDealCountPerTraderOrgStackingOnSourceOrg(month_YYYYMM){
+
+		var month = month_YYYYMM;
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly";
+		var restfulRequestParams = {
+		    month                       : month ,
+     		group_by_fields_in_select   : "EXT_TRADER_ORG_NAME as TRADER_ORG, EXT_SOURCE_ORG_NAME as PLATFORM" ,
+			group_by_fields_in_group_by : "EXT_TRADER_ORG_NAME , EXT_SOURCE_ORG_NAME ",
+			orderBy                     : "deal_count",
+			topN                        : "100",
+			orderDirection              : "desc"
+		};
+		
+		var category_column_name='TRADER_ORG';
+		var stacking_column_name='PLATFORM';
+		var titlePrefix = "Deals Count  per Trader Org - Stacking Source -  ";
+
+		var value_1_title       = titlePrefix + " Deal Count  ( " + month + " )";
+	 	//var value_2_title       = titlePrefix + " Deal Volume ( " + month + " )";		
+	 	
+	 	
+	 	var value_1_column_name = 'DEAL_COUNT';
+	 	var value_1_column_tip  = 'value';	 	
+	 	//var value_2_column_name = 'USD_AMOUNT_IN_BILLION';
+	 	//var value_2_column_tip  = 'usd amount in billion';	 	
+	 	
+
+    	var chartContainer = _chartContainer;
+	 	var value_1_ChartDivID    = prepareChartTitleAndDiv(chartContainer, value_1_title);
+	 	//var value_2_ChartDivID    = prepareChartTitleAndDiv(chartContainer, value_2_title);
+	 	
+
+    	$.post(
+    			postUrl,
+    			restfulRequestParams,
+		    	function(restfulResponse,status){
+		    		
+		    		addParagraph( chartContainer,postUrl+" status:"+status+ " response:"+restfulResponse);		    		
+		    		
+		    		var jsonRestfulResponse = JSON.parse(restfulResponse);
+		    		var columnNames = jsonRestfulResponse['columnNames'      ];
+		    		var data        = jsonRestfulResponse['columnName_values'];
+		    		
+		    		var categary_list   = data[category_column_name];
+		    		var stacking_list   = data[stacking_column_name];
+		    		var value_1_list    = data[value_1_column_name];
+		    		
+		    		var chartData_uniqCategaryArray_uniqStackedGroupArray = baoyingLibGenerateC3ChartArrays(data,category_column_name, stacking_column_name,value_1_column_name );
+		    		var c3chartData             = chartData_uniqCategaryArray_uniqStackedGroupArray[0];
+		    		var uniqCategaryArray       = chartData_uniqCategaryArray_uniqStackedGroupArray[1];
+		    		var uniqStackedGroupArray   = chartData_uniqCategaryArray_uniqStackedGroupArray[2];
+		    		
+		    		var chartxxx    = baoyingLibDrawLinesC3Chart_height ("#"+value_1_ChartDivID, c3chartData, uniqCategaryArray   );
+		    		
+		    		
+		    		//var c3value_1_list = value_1_list.slice(0); //make a copy
+		    		//c3value_1_list.unshift(value_1_column_tip)    ; //add the 'value' to head of array
+		    		
+		    		//var c3value_2_list = value_2_list.slice(0); //make a copy
+		    		//c3value_2_list.unshift(value_2_column_tip)    ; //add the 'value' to head of array
+		    		
+		    		//baoyingLibDrawLinesC3Chart('#'+value_1_ChartDivID ,[c3value_1_list],categary_list); //[c2countList] means a matrix
+		    		//baoyingLibDrawLinesC3Chart('#'+value_2_ChartDivID,[c3value_2_list],categary_list);		    		
+		    		    	
+		    	}
+		);  		
+
+	}
+	
+	function drawChartsFXVolumePerOverallBroker(month_YYYYMM){
+
+		
+		var postUrl = "/BaoyingDataService/query_deal_monthly_fx";
+		var restfulRequestParams = {
+		    month                       : month_YYYYMM ,
+     		group_by_fields_in_select   : "case proxy_group_name   when 'd' then 'ddd'     when 'm' then 'mmm'     when 'f' then 'fff'   else 'x' end as xxx" ,
+			group_by_fields_in_group_by : "case proxy_group_name   when 'd' then 'ddd'     when 'm' then 'mmm'     when 'f' then 'fff'   else 'xxx' end ",
+			orderBy                     : "USD_AMOUNT_IN_BILLION",
+			orderDirection              : "desc"
+		};
+
+		var category_column_name='BROKER';
+		var titlePrefix = "FX Deals(metal excluded) per broker(DPA volume is not accurate because of ) - ";
+		
+		drawMonthlyCharts_FXorMetal(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}		
+	
+	function drawChartsFXPerDay(month_YYYYMM){
+
+		var postUrl = "/BaoyingDataService/query_deal_monthly_fx";
+		var restfulRequestParams = {
+		    month                       : month_YYYYMM ,
+     		group_by_fields_in_select   : "ext_deal_datetime_today as deal_date" ,
+			group_by_fields_in_group_by : "ext_deal_datetime_today ",
+			orderBy                     : "deal_date",
+			orderDirection              : "asc"
+		};
+
+		var category_column_name='DEAL_DATE';
+		var titlePrefix = "FX Deals(metal excluded) per day - ";
+		
+		drawMonthlyCharts_FXorMetal(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}	
+	
+	function drawChartsFX_theDate(month_YYYYMM , YYYY_MM_DD ){
+		
+
+		var postUrl = "/BaoyingDataService/query_deal_monthly_fx";
+		var restfulRequestParams = {
+		    month                       : month_YYYYMM ,
+		    condition_in_where          : "ext_deal_datetime_today = '" +YYYY_MM_DD+"'",
+     		group_by_fields_in_select   : "EXT_SOURCE_ORG_NAME as BROKER_ORG" ,
+			group_by_fields_in_group_by : "EXT_SOURCE_ORG_NAME ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+	 	var category_column_name='BROKER_ORG';
+		var titlePrefix = "FX Deals at date: " + YYYY_MM_DD +" : ";
+		
+		drawMonthlyCharts_FXorMetal(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}
+	
+	function drawChartsFX_theDate_theBroker(YYYYMM , YYYY_MM_DD , BrokerOrgName ){
+		
+		var month = YYYYMM;
+
+		var postUrl = "/BaoyingDataService/query_deal_monthly_metal";
+		var restfulRequestParams = {
+		    month                       : month ,
+		    condition_in_where          : "ext_deal_datetime_today = '" +YYYY_MM_DD+"'",
+		    condition_in_where_2        : "ext_source_org_name = '" +BrokerOrgName+"'",
+     		group_by_fields_in_select   : "EXT_TRADER_ORG_NAME" ,
+			group_by_fields_in_group_by : "EXT_TRADER_ORG_NAME ",
+			orderBy                     : "USD_AMOUNT_IN_BILLION",
+			orderDirection              : "desc"
+		};
+		
+	 	var category_column_name='EXT_TRADER_ORG_NAME';	 	
+		var titlePrefix = BrokerOrgName+" Metal Deals at date: " + YYYY_MM_DD +" : ";
+		drawMonthlyCharts_FXorMetal(month, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}		
+ 
+	function drawChartsMetalPerDay( month_YYYYMM ){
+	
+		var postUrl = "/BaoyingDataService/query_deal_monthly_metal";
+		var restfulRequestParams = {
+		    month                       : month_YYYYMM ,
+     		group_by_fields_in_select   : "ext_deal_datetime_today as deal_date" ,
+			group_by_fields_in_group_by : "ext_deal_datetime_today ",
+			orderBy                     : "deal_date",
+			orderDirection              : "asc"
+		};
+
+	 	var category_column_name='DEAL_DATE';
+		var titlePrefix = "Metal Deals per day - ";
+		
+		drawMonthlyCharts_FXorMetal(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+	}
+	
+
+	function drawChartsMetal_theDate(month_YYYYMM , YYYY_MM_DD ){
+		
+
+		var postUrl = "/BaoyingDataService/query_deal_monthly_metal";
+		var restfulRequestParams = {
+		    month                       : month_YYYYMM ,
+		    condition_in_where          : "ext_deal_datetime_today = '" +YYYY_MM_DD+"'",
+     		group_by_fields_in_select   : "EXT_SOURCE_ORG_NAME as BROKER_ORG" ,
+			group_by_fields_in_group_by : "EXT_SOURCE_ORG_NAME ",
+			orderBy                     : "deal_count",
+			orderDirection              : "desc"
+		};
+		
+	 	var category_column_name='BROKER_ORG';
+		var titlePrefix = "Metal Deals at date: " + YYYY_MM_DD +" : ";
+		
+		drawMonthlyCharts_FXorMetal(month_YYYYMM, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}
+	
+	function drawChartsMetal_theDate_theBroker(YYYYMM , YYYY_MM_DD , BrokerOrgName ){
+		
+		var month = YYYYMM;
+
+		var postUrl = "/BaoyingDataService/query_deal_monthly_metal";
+		var restfulRequestParams = {
+		    month                       : month ,
+		    condition_in_where          : "ext_deal_datetime_today = '" +YYYY_MM_DD+"'",
+		    condition_in_where_2        : "ext_source_org_name = '" +BrokerOrgName+"'",
+     		group_by_fields_in_select   : "EXT_TRADER_ORG_NAME" ,
+			group_by_fields_in_group_by : "EXT_TRADER_ORG_NAME ",
+			orderBy                     : "USD_AMOUNT_IN_BILLION",
+			orderDirection              : "desc"
+		};
+		
+	 	var category_column_name='EXT_TRADER_ORG_NAME';	 	
+		var titlePrefix = BrokerOrgName+" Metal Deals at date: " + YYYY_MM_DD +" : ";
+		drawMonthlyCharts_FXorMetal(month, postUrl, restfulRequestParams, category_column_name, titlePrefix);
+
+	}
+		
+	
+    $(document).ready(function(){
+    	
+        var month = "201708";
+        
+        drawChartsFXVolumePerOverallBroker("201705");
+        drawChartsFXVolumePerOverallBroker("201706");
+        drawChartsFXVolumePerOverallBroker("201707");
+        drawChartsFXVolumePerOverallBroker("201708");
+        
+        /*
+    	drawChartsDealCountPerDay(month);
+    	drawChartsDealCountPerExecutionType(month);
+    	drawChartsDealCountPerInstrument(month);
+    	drawChartsDealCountPerOverallBroker(month);
+    	drawChartsDealCountPerIDB(month);
+    	drawChartsDealCountPerTraderOrg(month);
+    	
+    	//drawChartsDealCountPerTraderOrgStackingOnSourceOrg(month);
+    	//drawChartsDealCountPerFXTTraderOrgStackingOnSourceOrg(month);
+    	
+    	drawChartsFXPerDay(month);
+    	drawChartsFX_theDate          (month,'2017-08-29');
+    	
+    	drawChartsMetalPerDay(month);
+    	
+    	drawChartsMetal_theDate          (month,'2017-08-29');
+    	drawChartsMetal_theDate_theBroker(month,'2017-08-29', 'DPA2');
+    	
+    	
+    	*/
+    	
+    });
+    </script>
+</body>
+</html>

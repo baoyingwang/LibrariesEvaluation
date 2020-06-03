@@ -1,8 +1,3 @@
-/*
- * XPathHelper.java
- *
- * Copyright (C) 2011 Thomson Reuters. All rights reserved.
- */
 package baoying.eval.jdk.util;
 
 import java.io.StringReader;
@@ -25,11 +20,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-/**
- * XPath helper. copied from TPA project, and add more util methods
- * 
- * @author ken.burns
- */
 public class XPathHelper
 {
     private static final Logger logger = LoggerFactory.getLogger(XPathHelper.class);

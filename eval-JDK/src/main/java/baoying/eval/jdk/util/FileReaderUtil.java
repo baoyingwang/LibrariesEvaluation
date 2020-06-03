@@ -15,8 +15,11 @@ import java.util.Properties;
 
 /**
  * It is still valuable, because of classpath utility method.
- * Useapache common io - FileUtils.java, and  IOUtils.java for others.
- * @author shirley
+ * Use apache common io - FileUtils.java, and  IOUtils.java for others.
+ *
+ * @Deprecated 新jdk中的Files就够了
+ * https://stackoverflow.com/questions/326390/how-do-i-create-a-java-string-from-the-contents-of-a-file
+ * 
  *
  */
 public class FileReaderUtil {
