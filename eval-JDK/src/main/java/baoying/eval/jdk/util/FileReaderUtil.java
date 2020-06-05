@@ -19,7 +19,7 @@ import java.util.Properties;
  *
  * @Deprecated 新jdk中的Files就够了
  * https://stackoverflow.com/questions/326390/how-do-i-create-a-java-string-from-the-contents-of-a-file
- * 
+ *
  *
  */
 public class FileReaderUtil {
