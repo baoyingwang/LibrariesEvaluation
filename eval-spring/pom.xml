@@ -12,6 +12,8 @@
 
   <properties>
     <spring.version>2.2.2.RELEASE</spring.version>
+    <docker.image.name>baoying/eval-spring-boot</docker.image.name>
+    <docker.image.tag>quickstart</docker.image.tag>
   </properties>
 
   <dependencies>
@@ -28,6 +30,16 @@
 
     <!-- https://spring.io/guides/gs/spring-boot/ -->
     <dependency>
+
+
+      <!--
+      TODO - springboot - pom dependency - 这里可以更改为parent指向spring-boot-starter-parent， 以避免大量的springboot依赖配置
+      参考：
+      https://segmentfault.com/a/1190000018854658
+      https://www.jianshu.com/p/628acadbe3d8
+      https://www.jianshu.com/p/748681229152
+      https://zhuanlan.zhihu.com/p/47362763
+      -->
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
       <version>${spring.version}</version>
@@ -83,10 +95,73 @@
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <mainClass>baoying.eval.spring.boot.Application</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <profiles>
+            <profile>dev</profile>
+            <profile>prod</profile>
+          </profiles>
+        </configuration>
+      </plugin>
+
+
+
+      <!-- 下面两个plugin，从 manning spring macroservice in action中copy而来 -->
+      <!-- maven-resources-plugin： 将源码中的docker文件copy到target中（并同时替换变量）by  -->
+      <!-- com.spotify：docker-maven-plugin：生成本应用对应image  -->
+      <!-- We use the Resources plugin to filer Dockerfile and run.sh, it inserts actual JAR filename -->
+      <!-- The final Dockerfile will be created in target/dockerfile/Dockerfile -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/dockerfile</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/docker</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <configuration>
+          <imageName>${docker.image.name}:${docker.image.tag}</imageName>
+          <dockerDirectory>${basedir}/target/dockerfile</dockerDirectory>
+          <resources>
+            <resource>
+              <targetPath>/</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
+        </configuration>
       </plugin>
     </plugins>
   </build>

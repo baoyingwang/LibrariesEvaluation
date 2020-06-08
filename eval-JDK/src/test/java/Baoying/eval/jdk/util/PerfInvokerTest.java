@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import baoying.util.PerfInvoker.PerfInvokerCallback;
 
 public class PerfInvokerTest {
 
@@ -30,7 +29,7 @@ public class PerfInvokerTest {
 
 		final AtomicInteger i = new AtomicInteger(0);
 
-		new PerfInvoker(speed, duaration, new PerfInvokerCallback() {
+		new PerfInvoker(speed, duaration, new PerfInvoker.PerfInvokerCallback() {
 
 			@Override
 			public void execute(long seq) {

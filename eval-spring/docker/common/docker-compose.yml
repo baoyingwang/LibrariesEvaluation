@@ -1,0 +1,6 @@
+version: '2'
+services:
+  evalspringservice:
+      image: baoying/eval-spring-boot:quickstart
+      ports:
+        - "8080:8080"

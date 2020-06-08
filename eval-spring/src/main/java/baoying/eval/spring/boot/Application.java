@@ -2,12 +2,15 @@ package baoying.eval.spring.boot;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @ServletComponentScan(basePackages="baoying.eval.spring.boot.logging")
@@ -16,6 +19,9 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    @Value("example.property")
+    private String exampleProperty;
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
@@ -26,10 +32,13 @@ public class Application {
             String[] beanNames = ctx.getBeanDefinitionNames();
             Arrays.sort(beanNames);
             for (String beanName : beanNames) {
-                System.out.println(beanName);
+                //System.out.println(beanName);
             }
+            System.out.println("total found:" + beanNames.length +" beans");
 
         };
     }
+
+
 
 }
