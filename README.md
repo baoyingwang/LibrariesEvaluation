@@ -29,3 +29,8 @@
     - 解决无法上传javadoc和source问题，通过定义他们（maven-source-plugin/maven-javadoc-plugin）于install phase， 避免了deploy时候他们还没有执行。
       - install步骤在deploy之前，这保证了deploy（上传）之前，source jar和java doc jar已经生成
       - 见root/pom.xml。 在eval-common/pom.xml, eval-vertx/pom.xml中，只是引用了他们，不需要特别配置，即完成了这两个module的source和doc的build
+
+# 特别感谢
+- 项目中很多代码和文章都参考了网上的已有的东西
+  - 所有使用到的地方，我都加上来来源的链接
+  - 但是百密一疏，如果有遗漏请务必通知我，将增加相关链接，或者删除（如果您不喜欢我这样参考您的内容的话）
