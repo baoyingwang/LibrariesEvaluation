@@ -24,6 +24,8 @@ import java.util.UUID;
  *   - TODO - required - global uuid - 在你的log 配置文件layout pattern中，增加这个设定的RequestID，譬如log4j2.xml中 - <PatternLayout pattern="%d{HH:mm:ss.SSS} %X{RequestId} [%t] %-5level %logger{36} - %msg%n"/>
  *      - 参考https://www.baeldung.com/mdc-in-log4j-2-logback
  * - note：本链接例子也很完整： https://blog.csdn.net/mxlgslcd/article/details/89521351
+ * - 扩展：客户端可能也通过header发上来co-relationid，这样方便来回消息的对应 P114 section 5.9.1 Manning 2017 - spring microservice in action by John C
+ *
  */
 @WebListener
 @Slf4j

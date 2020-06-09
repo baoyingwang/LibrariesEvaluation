@@ -111,11 +111,15 @@
           </execution>
         </executions>
         <configuration>
+          <!--
+          ！！！WARN 不要添加下面的profiles，否则执行mvn spring-boot:run的时候，总是识别为prod环境。原因待调查！！！
           <profiles>
             <profile>dev</profile>
             <profile>prod</profile>
           </profiles>
+          -->
         </configuration>
+
       </plugin>
 
 

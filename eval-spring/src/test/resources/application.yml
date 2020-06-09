@@ -1,0 +1,5 @@
+# as default
+example.property: "I AM THE DEFAULT application.yml"
+spring:
+  profiles:
+    active: test

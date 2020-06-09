@@ -1,6 +1,6 @@
 /bin
-/log
-/logarchive
+/**/log
+/**/logarchive
 /build
 /ide_bin
 /.gradle
