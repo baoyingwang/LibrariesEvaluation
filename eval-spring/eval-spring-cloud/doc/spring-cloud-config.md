@@ -6,18 +6,6 @@ https://spring.io/projects/spring-cloud-config
 - 别种Spring Cloud Config了，直接用Consul吧
   - Consul能同时当配置中心和注册中心，少维护一个组件呢
 
-# 日常使用
-
-## Spring Cloud Config 常用REST
-- TODO：找到/搭建可视化监控Spring Cloud Config情况的监控工具
-- api这里可以看到：https://github.com/spring-cloud/spring-cloud-config，就在主页
-- 获取某服务对应的配置文件
-  - http://localhost:8888/serviceName/profileName
-  - e.g. http://localhost:8888/licensingservice/dev
-  - note: profileName一定要给，默认的用'default', e.g. http://localhost:8888/licensingservice/default
-  - warn: 它可能返回套值，一套为dev，一套为default。合并这些值的只能在service内部完成。
-  
-  
 # 灵魂拷问：配置中心到底用啥？ spring cloud config，etcd，consul，eureka ，zookeeper
 
 - spring microservice in action ,table 3.1 /p69 有个表格，简要对比了etcd/eurika/consul/zookeeper/spring cloud config
@@ -40,6 +28,16 @@ https://spring.io/projects/spring-cloud-config
               - spring cloud config中支持使用git，然而git权限粒度又不那么好，所以需要进一步看了 - 参考Spring Boot in Action by Craig
   - 动态下发
 
+# 日常使用
+
+## Spring Cloud Config 常用REST
+- TODO：找到/搭建可视化监控Spring Cloud Config情况的监控工具
+- api这里可以看到：https://github.com/spring-cloud/spring-cloud-config，就在主页
+- 获取某服务对应的配置文件
+  - http://localhost:8888/serviceName/profileName
+  - e.g. http://localhost:8888/licensingservice/dev
+  - note: profileName一定要给，默认的用'default', e.g. http://localhost:8888/licensingservice/default
+  - warn: 它可能返回套值，一套为dev，一套为default。合并这些值的只能在service内部完成。
 
 # 开发过程
 
@@ -91,10 +89,6 @@ spring:
               searchLocations: classpath:config/,classpath:config/licensingservice
 
 ```
-
-
-
-
 
 ## 构造一个简单的基于文件或者classpath的spring cloud config server - 非常简单
 

@@ -1,9 +1,10 @@
 [TOC]
 # Overview
+client.resiliency：在客户端完成相应服务调用可用性的维护
 
 There are four client resiliency patterns:
 - 1 Client-side load balancing - Ribbon
-- 2 Circuit breakers - 一个服务调用如果执行太久或者失败太多，则去掉它（啥时候填回来）
+- 2 Circuit breakers - 熔断，一个服务调用如果执行太久或者失败太多，则去掉它（啥时候填回来）
   - A circuit breaker acts as a middle man between the application and the remote service
 - 3 Fallbacks - 一个服务失败，换到另一个服务或者指定的其他行为
 - 4 Bulkheads - 不同的service对应不同的threadpool，避免相互影响
