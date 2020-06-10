@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <!-- 因为我有自己定义的parent，所以没有指定parent为spring-boot-starter-parent
+     https://segmentfault.com/a/1190000018854658
+     -->
+    <artifactId>eval-spring</artifactId>
+    <groupId>baoying</groupId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>eval-spring-boot</artifactId>
+  <name>eval-spring-boot</name>
+
+
+  <properties>
+    <spring.version>2.2.2.RELEASE</spring.version>
+    <docker.image.name>baoying/eval-spring-boot</docker.image.name>
+    <docker.image.tag>quickstart</docker.image.tag>
+  </properties>
+
+
+  <dependencies>
+
+    <!--
+    只用spring自己的spring-boot-starter-log4j2就行了
+    主要是为了logging,
+    <dependency>
+      <groupId>baoying</groupId>
+      <artifactId>eval-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    -->
+
+    <!-- https://spring.io/guides/gs/spring-boot/ -->
+    <dependency>
+<!--
+      TODO - springboot - pom dependency - 这里可以更改为parent指向spring-boot-starter-parent， 以避免大量的springboot依赖配置
+      参考：
+      https://segmentfault.com/a/1190000018854658
+      https://www.jianshu.com/p/628acadbe3d8
+      https://www.jianshu.com/p/748681229152
+      https://zhuanlan.zhihu.com/p/47362763
+-->
+
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring.version}</version>
+      <exclusions>
+<!--
+         log4j2 与springboot冲突-
+        记得添加 spring-boot-starter-log4j2
+        https://www.callicoder.com/spring-boot-log4j-2-example/
+        https://www.cnblogs.com/xishuai/p/spring-boot-log4j2.html
+        https://stackoverflow.com/questions/46555617/log4j2-not-working-in-spring-boot-application
+-->
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+
+      </exclusions>
+    </dependency>
+
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <version>${spring.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <!-- getting/setter/ etc-->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.12</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <mainClass>baoying.eval.spring.boot.Application</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <!--
+          ！！！WARN 不要添加下面的profiles，否则执行mvn spring-boot:run的时候，总是识别为prod环境。原因待调查！！！
+          <profiles>
+            <profile>dev</profile>
+            <profile>prod</profile>
+          </profiles>
+          -->
+        </configuration>
+
+      </plugin>
+
+
+
+      <!-- 下面两个plugin，从 manning spring macroservice in action中copy而来 -->
+      <!-- maven-resources-plugin： 将源码中的docker文件copy到target中（并同时替换变量）by  -->
+      <!-- com.spotify：docker-maven-plugin：生成本应用对应image  -->
+      <!-- We use the Resources plugin to filer Dockerfile and run.sh, it inserts actual JAR filename -->
+      <!-- The final Dockerfile will be created in target/dockerfile/Dockerfile -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/dockerfile</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/docker</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>1.2.1</version>
+        <configuration>
+          <imageName>${docker.image.name}:${docker.image.tag}</imageName>
+          <dockerDirectory>${basedir}/target/dockerfile</dockerDirectory>
+          <resources>
+            <resource>
+              <targetPath>/</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
