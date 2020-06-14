@@ -11,6 +11,10 @@ There are four client resiliency patterns:
 
 
 # 通过Hystrix完成 CircuitBraker/Fallback/Bulkhead - client resilience
+- Hystrix原理是给当前的client REST调用增加一个wrapper，发现各种异常情况之后完成针对性的行为
+- 其没有引入新的进程，实在原有的方法执行上面增加一个annotation。这个方法可以是任意方法，但是一般是REST调用
+
+
 ## Hystrix使用例子（1个小例子，但是很全）
 ```
 class LicensingService

@@ -1,10 +1,12 @@
 [TOC]
 # Overview
 https://spring.io/projects/spring-cloud-config
+- Config作为一个独立的组件/进程，是的使用者可以方便的从这里拉取自己的配置。
 - 注意：Consul可以作为Spring Cloud Config的backend出现。
   - 天啊，这么多组件。相当于多维护了一个（1组：避免单点故障）SpringCloudConfig服务
 - 别种Spring Cloud Config了，直接用Consul吧
   - Consul能同时当配置中心和注册中心，少维护一个组件呢
+
 
 # 灵魂拷问：配置中心到底用啥？ spring cloud config，etcd，consul，eureka ，zookeeper
 

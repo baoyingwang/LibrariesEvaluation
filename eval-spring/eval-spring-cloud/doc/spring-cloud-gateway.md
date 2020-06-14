@@ -2,6 +2,8 @@
 # Overview
 - Gateway - 作为系统的入口，与外部系统区分开
   - 还可以做认证/授权/MetricsCollection/Logging等
+  - 把client发送进来的url转换为真正的service url并进行调用。这个调用可能通过registry/Eureka完成
+  
 - 现在都用Spring Cloud Gateway了，新项目不再使用Zuul了
 - 还有什么别的方式么？ 
   - AWS ELB也可以做类似的功能
