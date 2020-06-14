@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,14 +19,18 @@ import static baoying.eval.spring.boot.resulthandle.ApiErrorCode.DUPLICATED_SUBM
 @RestController
 public class OrderController {
 
-    //Jackson默认只能识别public（有getter/setting）的field
-    //所以加上这个annotation以识别其他的
-    //https://www.baeldung.com/jackson-jsonmappingexception
+
+
+    /**
+     * Jackson默认只能识别public（有getter/setting）的field
+     * 所以加上这个annotation以识别其他的
+     * https://www.baeldung.com/jackson-jsonmappingexception
+     */
     @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
     static class NewOrder{
 
         @JsonProperty("client_ord_id")
-        String clientOrderID;
+        String clientOrderId;
 
         @JsonProperty("client_name")
         String clientName;
@@ -46,16 +49,17 @@ public class OrderController {
         NewOrder order;
     }
 
-    //Key: clientOrderId
+    /**
+     * Key: clientOrderId
+     */
     Map<String, NewOrderResult> ordersByOrdID = new ConcurrentHashMap();
     Map<String, NewOrderResult> ordersByClientID = new ConcurrentHashMap();
 
-    //下单前价格在前段都计算好了，为了防止被攻击内部应该有个再次核查的功能
     @PostMapping("/v1/order")
     public ApiResult<NewOrderResult> newOrder(@RequestBody NewOrder order) {
-        int errorCode = 40001;
-        if(ordersByClientID.containsKey(order.clientOrderID)){
-            return ApiResult.error(DUPLICATED_SUBMIT, "order already exists, order.clientOrderID:"+order.clientOrderID);
+        //int errorCode = 40001;
+        if(ordersByClientID.containsKey(order.clientOrderId)){
+            return ApiResult.error(DUPLICATED_SUBMIT, "order already exists, order.clientOrderID:"+order.clientOrderId);
         }
 
         String orderId = String.valueOf(System.currentTimeMillis());
@@ -65,7 +69,7 @@ public class OrderController {
         result.order = order;
 
         ordersByOrdID.put(result.orderId, result);
-        ordersByClientID.put(order.clientOrderID, result);
+        ordersByClientID.put(order.clientOrderId, result);
         return ApiResult.success(result);
     }
 

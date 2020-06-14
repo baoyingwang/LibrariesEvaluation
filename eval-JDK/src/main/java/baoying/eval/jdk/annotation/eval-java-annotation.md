@@ -63,5 +63,5 @@ public interface UserMapper {
     - 该文中给出了Spring EnableXXX注解的所有4中方式（用1个注解，来完成4中不同bean的引入）
   - https://www.jianshu.com/p/3da069bd865c
     - 这个例子中就是上面提到的4中bean中的ImportBeanDefinitionRegistrar这种
-- 见package baoying.eval.spring.boot.annotation.enable_annotation_ex 中更加详细的解释
+- 见package baoying.eval.spring.boot.annotation.enableannotationexample 中更加详细的解释
   - 里面有一个md，看那个（主要是注解类中增加类一些注释）

@@ -31,6 +31,7 @@ import java.util.UUID;
 @Slf4j
 public class LogUniqueIDPerRequest implements ServletRequestListener {
 
+    @Override
     public void requestInitialized(ServletRequestEvent arg0) {
         log.debug("++++++++++++ REQUEST INITIALIZED +++++++++++++++++");
 
@@ -38,6 +39,7 @@ public class LogUniqueIDPerRequest implements ServletRequestListener {
 
     }
 
+    @Override
     public void requestDestroyed(ServletRequestEvent arg0) {
         log.debug("-------------REQUEST DESTROYED ------------");
         MDC.clear();

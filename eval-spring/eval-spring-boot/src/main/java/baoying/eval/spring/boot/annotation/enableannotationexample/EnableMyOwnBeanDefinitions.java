@@ -1,6 +1,5 @@
-package baoying.eval.spring.boot.annotation.enable_annotation_ex;
+package baoying.eval.spring.boot.annotation.enableannotationexample;
 
-//import services.SettingService;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -10,6 +9,11 @@ import java.lang.annotation.Target;
 
 /**
  * https://blog.csdn.net/andy_zhang2007/java/article/details/83957588
+ *
+ * 只要在你的代码中
+ * 1. 增加本package代码
+ * 2. 增加 @EnableMyOwnBeanDefinitions到你的Applicaiton类中
+ * 则所有Import中列出来的类都可以自动形成spring bean。你可以通过@Autowire直接使用
  *
  * 模仿 Spring 框架的 @EnableXXX 注解自定义的一个 @Enable 注解，
  * 此类注解一般使用 @Import 通过以下四种方式进行 bean 定义：

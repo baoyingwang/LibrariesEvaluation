@@ -1,4 +1,4 @@
-package baoying.eval.spring.boot.annotation.enable_annotation_ex;
+package baoying.eval.spring.boot.annotation.enableannotationexample;
 
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -22,6 +22,7 @@ public class MyOrderServiceBeanDefinitionRegistrar implements ImportBeanDefiniti
      * @param importingClassMetadata 注解元数据
      * @param registry               Spring IoC 容器
      */
+    @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry) {
 

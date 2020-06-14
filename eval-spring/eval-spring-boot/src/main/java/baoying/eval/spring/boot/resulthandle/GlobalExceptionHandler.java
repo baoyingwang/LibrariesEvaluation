@@ -14,23 +14,36 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 
-//TODO partial - error handing - 转化这里的error为统一的error-code格式
 
-//多个级别的error control
-//1. 全局 - 即这里
-//2. controller（入口） - 入口那里可能出现一些runtime exception之类的，就转到这里了
-//3. TODO： 验证filter和interceptor出现的runtime exception是否会到这里处理
 
-//frame work来自 https://blog.csdn.net/daguanjia11/article/details/80059002
-//对返回消息增加 json封装（with error code）
+/**
+ *
+ //TODO partial - error handing - 转化这里的error为统一的error-code格式
+
+ //多个级别的error control
+ //1. 全局 - 即这里
+ //2. controller（入口） - 入口那里可能出现一些runtime exception之类的，就转到这里了
+ //3. TODO： 验证filter和interceptor出现的runtime exception是否会到这里处理
+
+ //frame work来自 https://blog.csdn.net/daguanjia11/article/details/80059002
+ //对返回消息增加 json封装（with error code）
+ *
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    //验证输入参数而引发的error
-    //from https://mkyong.com/spring-boot/spring-rest-error-handling-example/
-    // @Validate For Validating Path Variables and Request Parameters
+
+
+    /**
+     * 验证输入参数而引发的error
+     * from https://mkyong.com/spring-boot/spring-rest-error-handling-example/
+     * @Validate For Validating Path Variables and Request Parameters
+     * @param response
+     * @param e
+     * @throws IOException
+     */
     @ExceptionHandler({ConstraintViolationException.class,
             org.springframework.http.converter.HttpMessageNotReadableException.class})
     public void constraintViolationException(HttpServletResponse response, Exception e) throws IOException {
@@ -45,10 +58,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    //这里只是一个例子，就是说对于某种类型的Exception，我们可以针对性的处理
-    class BusinessException01 extends RuntimeException{
+
+
+    /**
+     * //这里只是一个例子，就是说对于某种类型的Exception，我们可以针对性的处理
+     */
+    static class Business01Exception extends RuntimeException{
     }
-    @ExceptionHandler(BusinessException01.class)
+    @ExceptionHandler(Business01Exception.class)
     public void handleBusinessException01(HttpServletResponse response) throws IOException {
 
         response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -68,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> othersErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+    public ResponseEntity<String> othersErrorHandler(HttpServletRequest req, Exception e) {
         String url = req.getRequestURI();
         logger.error("request error at " + url, e);
         return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -5,7 +5,10 @@ import lombok.Data;
 @Data
 public class ApiResult<T> {
 
-    private String status; //OK or ERROR
+    /**
+     * OK or ERROR
+     */
+    private String status;
     private int errorCode;
     private String errorMessage;
     private T data;

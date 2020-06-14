@@ -1,4 +1,4 @@
-package baoying.eval.spring.boot.annotation.enable_annotation_ex;
+package baoying.eval.spring.boot.annotation.enableannotationexample;
 
 import org.springframework.context.annotation.ImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
@@ -13,6 +13,7 @@ import org.springframework.core.type.AnnotationMetadata;
  */
 public class MyLogServiceImportSelector implements ImportSelector {
 
+    @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         // 返回要注册成为 bean 的类的全名称的数组
         return new String[]{MyLogService.class.getName()};

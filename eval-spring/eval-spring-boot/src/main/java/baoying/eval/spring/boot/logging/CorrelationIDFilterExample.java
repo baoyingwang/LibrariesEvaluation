@@ -25,7 +25,7 @@ import java.io.IOException;
 public class CorrelationIDFilterExample extends OncePerRequestFilter {
 
     @Value("${header-correlationid-name:tx-correlation-id}")
-    String exampleCorrelationIDName;
+    String exampleCorrelationIdName;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,10 +35,10 @@ public class CorrelationIDFilterExample extends OncePerRequestFilter {
         //然后本类里面声明一个@Value("${header-correlationid-name:example-corelation-id}")
         //String exampleCorrelationIDName = "example-corelation-id";
 
-        String exampleCorrelationID = request.getHeader(exampleCorrelationIDName);
-        log.info("correlation id header {}:{}", exampleCorrelationIDName, exampleCorrelationID);
-        if(exampleCorrelationID != null && !exampleCorrelationID.equals("")){
-            response.setHeader(exampleCorrelationIDName, exampleCorrelationID);
+        String exampleCorrelationId = request.getHeader(exampleCorrelationIdName);
+        log.info("correlation id header {}:{}", exampleCorrelationIdName, exampleCorrelationId);
+        if(exampleCorrelationId != null && !"".equals(exampleCorrelationId)){
+            response.setHeader(exampleCorrelationIdName, exampleCorrelationId);
         }
 
         //警告：别忘了把下面这行加上，是的filter能够继续走下去

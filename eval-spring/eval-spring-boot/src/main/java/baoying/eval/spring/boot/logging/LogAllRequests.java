@@ -27,7 +27,11 @@ public class LogAllRequests extends CommonsRequestLoggingFilter{
         String safeLoggingMessage = loggingMsg==null?null:loggingMsg.replaceFirst("Signature=.*?&","Signature=hided");
         return safeLoggingMessage;
     }
-    //https://www.javadevjournal.com/spring/log-incoming-requests-spring/
+
+    /**
+     *
+     * https://www.javadevjournal.com/spring/log-incoming-requests-spring/
+     */
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
 
