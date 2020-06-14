@@ -5,7 +5,7 @@
 
 
 # 资料
-- (2017) Spring Microservices In Action-John Carnell-Manning
-- Microservice Patterns -Manning.pdf - Chris
+- Spring Microservices In Action-John Carnell-Manning
+- Microservice Patterns -Manning - Chris
 - springboot in action - Craig Walls
 - 玩儿转spring cloud全家桶 https://time.geekbang.org/course/detail/100023501-93220  
