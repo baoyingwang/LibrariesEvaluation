@@ -33,7 +33,8 @@ public class Lambda_InterfaceWithSingleMethod {
 
     public void singleMethodSingleArgument() {
 
-        ISingleArgument x = n -> { //这里可以直接写n, 或者 (int n) -> {}
+        //这里可以直接写n, 或者 (int n) -> {}
+        ISingleArgument x = n -> {
             System.out.println(n);
             return 1;
         };
