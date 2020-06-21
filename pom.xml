@@ -18,6 +18,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
+
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -108,6 +110,7 @@
     <module>eval-grpc</module>
     <module>eval-perf</module>
     <module>eval-JDK</module>
+    <module>eval-jvm</module>
     <module>eval-vertx</module>
     <module>eval-netty</module>
     <module>eval-qfj</module>

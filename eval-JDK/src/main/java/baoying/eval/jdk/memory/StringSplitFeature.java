@@ -1,7 +1,5 @@
 package baoying.eval.jdk.memory;
 
-import javafx.scene.control.RadioMenuItem;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;

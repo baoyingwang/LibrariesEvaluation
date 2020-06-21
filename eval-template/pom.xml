@@ -10,5 +10,7 @@
   <artifactId>eval-template</artifactId>
   <name>eval-template</name>
 
+  <dependencies>
 
+  </dependencies>
 </project>
