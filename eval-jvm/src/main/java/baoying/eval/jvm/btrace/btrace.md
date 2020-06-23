@@ -313,11 +313,8 @@ where possible options include:
 Many limitations in the btrace script by default(unsafe/untrusted mode), e.g. you cannot new any object. Link to be added about the limitation
 
 
-
 Steps
-
 * your script class should be marked as @BTrace(trusted=true)
-
 e.g.
 ```
 @BTrace(trusted=true)
@@ -328,7 +325,6 @@ public class MemoryEater {
 -u Run in trusted mode
 
 
-
 note: trusted=true/fase is introduced since ???　to replace previous unsafe. From web, you can find many pages to mentino the depreated: -Dcom.sun.btrace.unsafe=true and is @BTrace(unsafe=true).
 
 
@@ -337,3 +333,9 @@ note: trusted=true/fase is introduced since ???　to replace previous unsafe. Fr
 否则可能会出现一些奇怪的问题
 - e.g. Non-numeric value found - int expected
 - e.g. 
+
+
+# Reference
+- 基本用法看这里
+  - 主页的wiki https://github.com/btraceio/btrace/wiki
+  - 还有btrace 脚本提示各个参数
