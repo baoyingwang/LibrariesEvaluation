@@ -7,16 +7,16 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>eval-template</artifactId>
-  <name>eval-template</name>
+  <artifactId>eval-redis</artifactId>
+  <name>eval-redis</name>
 
   <dependencies>
-
-      <dependency>
-          <groupId>redis.clients</groupId>
-          <artifactId>jedis</artifactId>
-          <version>3.2.0</version>
-          <scope>compile</scope>
-      </dependency>
+    <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>3.2.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 </project>
