@@ -6,4 +6,4 @@
     - map/filter等等
     - https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html
   - 譬如多线程调用的lamda - https://docs.oracle.com/javase/tutorial/collections/streams/parallelism.html
-  - 譬如lamda/stream运算中的exception处理
+  
