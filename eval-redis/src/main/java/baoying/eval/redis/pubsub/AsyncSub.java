@@ -1,4 +1,4 @@
-package baoying.eval.redis;
+package baoying.eval.redis.pubsub;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 

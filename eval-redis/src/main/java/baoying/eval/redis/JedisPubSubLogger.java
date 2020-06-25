@@ -2,7 +2,10 @@ package baoying.eval.redis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicLong;
 public class JedisPubSubLogger extends JedisPubSub {
+
+    private AtomicLong receivedMessageCount = new AtomicLong(0);
 
     /**
      * 通过普通订阅（非channel pattern）得到消息
@@ -11,8 +14,9 @@ public class JedisPubSubLogger extends JedisPubSub {
      */
     @Override
     public void onMessage(String channel, String message) {
+        long receivedCount = receivedMessageCount.incrementAndGet();
         //这里打印的线程名称为：Main，就是当前线程！
-        System.out.println(Instant.now().toString()+ " onMessage - Thread:"+Thread.currentThread().getName()+", channel:"+channel +", message:" + message);
+        System.out.println(Instant.now().toString()+ " onMessage - Thread:"+Thread.currentThread().getName()+", channel:"+channel +", message:" + message + ", count:" + receivedMessageCount);
 
     }
 
@@ -24,7 +28,8 @@ public class JedisPubSubLogger extends JedisPubSub {
      */
     @Override
     public void onPMessage(String pattern, String channel, String message) {
-        System.out.println(Instant.now().toString()+ " onPMessage - Thread:"+Thread.currentThread().getName()+", pattern:"+pattern + ", channel:"+channel+", message:" + message);
+        long receivedCount = receivedMessageCount.incrementAndGet();
+        System.out.println(Instant.now().toString()+ " onPMessage - Thread:"+Thread.currentThread().getName()+", pattern:"+pattern + ", channel:"+channel+", message:" + message+ ", count:" + receivedMessageCount);
     }
 
     /**

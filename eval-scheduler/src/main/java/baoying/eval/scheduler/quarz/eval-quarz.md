@@ -25,4 +25,9 @@ Trigger 有name和group属性
 
 参考：https://www.jianshu.com/p/dc4afa714440 五、Quartz中Trigger理解和使用
 
+# Misfire情况比较复杂
+本文给出了比较详细的介绍，不过还是非常复杂 https://www.nurkiewicz.com/2012/04/quartz-scheduler-misfire-instructions.html
+- 基本情况是说，其有一个misfirethreshhold（default 60秒），如果是60秒以内的都可以继续。
+- 但是实际情况比这个要复杂，针对不同的调度类型可能有不同的行为
+
     
