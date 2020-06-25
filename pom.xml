@@ -119,7 +119,8 @@
     <module>eval-python</module>
     <module>eval-interview</module>
     <module>eval-scheduler</module>
-	<module>eval-redis</module>
+    <module>eval-redis</module>
+    <module>eval-db</module>
   </modules>
   <!-- manual 添加 - 上传到远端nexus/maven仓库 - 执行mvn deploy时候-->
   <distributionManagement>
