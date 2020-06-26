@@ -45,16 +45,16 @@ public class App {
         prepareData.recreateTable();
         prepareData.cleanTable();
         insertData(ds, 300000, 300009);
-        insertData(ds, 600000, 600009);
-        insertData(ds, 999990, 999999);
+        //insertData(ds, 600000, 600009);
+        //insertData(ds, 999990, 999999);
 
         InsertService insertService2 = new InsertService(ds, 200000, 299999);
-        InsertService insertService4 = new InsertService(ds, 400000, 499999);
-        InsertService insertService8 = new InsertService(ds, 800000, 899999);
+        //InsertService insertService4 = new InsertService(ds, 400000, 499999);
+        //InsertService insertService8 = new InsertService(ds, 800000, 899999);
 
         insertService2.start();
-        insertService4.start();
-        insertService8.start();
+        //insertService4.start();
+        //insertService8.start();
 
 
         new LockWithUpdateService(ds).start();
