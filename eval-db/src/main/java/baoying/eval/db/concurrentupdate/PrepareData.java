@@ -23,29 +23,52 @@ public class PrepareData {
 
     }
 
-    public void popuateData() throws  Exception{
+    public void dropTable() throws Exception{
 
-        String serialNum = "9001";
-        String ordertime = "123456789";
-        //String stkId = "%06d";
-        String exchid = "0";
-
-        String sql = "insert into BaoyingT3Order( SERIALNUM    ,  ORDERTIME    ,  STKID        ,  CONTRACTNUM ,  EXCHID      ,  REGID       ,  OFFERREGID  ,  DESKID     )values\n" +
-                "(?, ?, ?, 'CONTRACTNUM1',?,'REGID3','OFFREGID4','DESKID5')";
-        Connection conn = dataSource.getConnection();
-
-        PreparedStatement st = conn.prepareStatement(sql);
-        for(int i=0; i<15; i++){
-
-            st.setString(1, serialNum);
-            st.setString(2, ordertime);
-            st.setString(3, String.format("%6d", i+1));
-            st.setString(4, exchid);
-            st.executeUpdate();
+        try{
+            Connection conn = dataSource.getConnection();
+            Statement st = conn.createStatement();
+            st.executeUpdate("drop table BaoyingT3Order");
+            st.close();
+            conn.commit();
+            conn.close();
+        }catch (Exception e){
+            if(e.getMessage().indexOf("ORA-00942")>=0){
+                System.out.println("ignore table/view not exists error - "+ e.getMessage());
+            }else{
+                e.printStackTrace();
+            }
 
         }
+
+
+    }
+    public void recreateTable() throws Exception{
+
+        dropTable();
+
+        Connection conn = dataSource.getConnection();
+        Statement st = conn.createStatement();
+        st.executeUpdate("create table BaoyingT3Order"
+                + "("
+                + "  SERIALNUM           NUMBER(8) not null,"
+                + "  ORDERTIME           NUMBER(14) not null,"
+                + "  STKID               VARCHAR2(8) not null,"
+                + ""
+                + "  CONTRACTNUM         VARCHAR2(30) ,"
+                + "  EXCHID              VARCHAR2(1),"
+                + "  REGID               VARCHAR2(10),"
+                + "  OFFERREGID          VARCHAR2(10) ,"
+                + "  DESKID              VARCHAR2(8),"
+                + "KNOCKQTY    NUMBER(15),"
+                + ""
+                + ""
+                + "  CONSTRAINT PK_BaoyingT3Order  PRIMARY KEY (ORDERTIME, SERIALNUM, STKID)"
+                + ")");
         st.close();
         conn.commit();
         conn.close();
+
     }
+
 }

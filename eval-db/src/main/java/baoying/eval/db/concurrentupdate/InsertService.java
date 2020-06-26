@@ -14,11 +14,17 @@ import java.util.concurrent.TimeUnit;
 
 public class InsertService {
 
-    private Logger logger = LoggerFactory.getLogger(UpdateService.class);
+    private Logger logger = LoggerFactory.getLogger(InsertService.class);
 
     private BasicDataSource dataSource;
-    InsertService(BasicDataSource dataSource){
+    private int stkStart;
+    private int stkEndEx;
+    private int nextInsertStkId;
+    InsertService(BasicDataSource dataSource, int stkStart, int stkEndEx){
         this.dataSource = dataSource;
+        this.stkStart = stkStart;
+        this.stkEndEx = stkEndEx;
+        this.nextInsertStkId = this.stkEndEx-1; //故意从尾部开始，造成每次update lock都是新记录
     }
 
 
@@ -28,83 +34,33 @@ public class InsertService {
 
         scheduledExecutorService.scheduleWithFixedDelay(()->{
             this.execute();
-        }, 1,500, TimeUnit.MILLISECONDS);
+        }, 1,5, TimeUnit.MILLISECONDS);
 
     }
 
-    private String nextStkId(){
-        String sql = "select max(stkId) from BaoyingT3Order";
 
-        Connection conn = null;
-        String nextStkId = "";
-        try{
 
-            conn = dataSource.getConnection();
-
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            String maxStkId = "";
-            while(rs.next()){
-                maxStkId = rs.getString(1);
-            }
-
-            if(maxStkId.length() == 0){
-                maxStkId = "000000";
-            }
-
-            int intMaxStkId = Integer.parseInt(maxStkId);
-            int intNextStkId = intMaxStkId + 1;
-            nextStkId = String.format("%06d", intMaxStkId);
-
-            conn.commit();
-
-        }catch (Exception e){
-            logger.error("error", e);
-            App.rollbackConn(conn);
-        }finally {
-            App.closeConn(conn);
-        }
-
-        return nextStkId;
-
-    }
 
     private void execute(){
 
-        logger.info("begin");
-
-        String insertSql = "insert into BaoyingT3Order( SERIALNUM    ,  ORDERTIME    ,  STKID        ,  CONTRACTNUM ,  EXCHID      ,  REGID       ,  OFFERREGID  ,  DESKID     )values\n" +
-                "(?, ?, ?, 'CONTRACTNUM1','0','REGID3','OFFREGID4','DESKID5');";
-
-        String serialNum = "9001";
-        String ordertime = "123456789";
-        String stkId = this.nextStkId();
-
-        Connection conn = null;
-        try{
-
-            conn = dataSource.getConnection();
-
-            PreparedStatement lockSt = conn.prepareStatement(insertSql);
-            lockSt.setString(1, serialNum);
-            lockSt.setString(2, ordertime);
-            lockSt.setString(3, stkId);
-            int inserteCount = lockSt.executeUpdate();
-            if(inserteCount <= 0){
-                logger.error("insert failed:", inserteCount);
-            }
-
-            conn.commit();
-
-        }catch (Exception e){
-            logger.error("error", e);
-            App.rollbackConn(conn);
-        }finally {
-            App.closeConn(conn);
+        if(this.nextInsertStkId < this.stkStart){
+            logger.warn("no more insert since reached the last:{}", this.nextInsertStkId);
+            return;
         }
 
 
-        logger.info("end");
+        String nextStkId = String.format("%06d",this.nextInsertStkId);
+        int intNextStkId = Integer.parseInt(nextStkId);
+
+        long startMS = System.currentTimeMillis();
+        logger.info("begin");
+
+        App.insertData(this.dataSource, intNextStkId, intNextStkId+1);
+
+        logger.info("end, inserted:{} cost={}ms", intNextStkId, System.currentTimeMillis()-startMS);
+
+        this.nextInsertStkId = this.nextInsertStkId-1;
+
 
     }
 }
