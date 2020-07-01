@@ -8,7 +8,7 @@ public class RedisSub {
 
     public static void main(String[] args) throws Exception{
 
-        Jedis jedis = new Jedis("localhost", 16379);
+        Jedis jedis = new Jedis("localhost", 6379);
         //jedis.auth("your_auth");
 
         JedisPubSubLogger jedisPubSubLogger = new JedisPubSubLogger();
