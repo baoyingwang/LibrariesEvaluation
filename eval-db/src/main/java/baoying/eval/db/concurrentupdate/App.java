@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,10 +15,16 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class App {
+
+    static String serialNum = "9001";
+    static int ordertime = 123456789;
+    static String exchid = "0";
+
     private static Logger logger = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) throws Exception{
 
+        App app = new App();
         logger.info("begin:{}", "db lock test app");
 
         //https://www.baeldung.com/java-connection-pooling
@@ -36,6 +39,7 @@ public class App {
         ds.setMaxIdle(10);
         ds.setMaxOpenPreparedStatements(100);
         ds.setDefaultAutoCommit(false);
+        ds.setMaxTotal(40);
 
         //这个isolation level非常重要，因为这是对lock的测试
         ds.setDefaultTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -44,22 +48,18 @@ public class App {
         PrepareData prepareData = new PrepareData(ds);
         prepareData.recreateTable();
         prepareData.cleanTable();
-        insertData(ds, 300000, 300009);
-        //insertData(ds, 600000, 600009);
-        //insertData(ds, 999990, 999999);
-
-        InsertService insertService2 = new InsertService(ds, 200000, 299999);
-        //InsertService insertService4 = new InsertService(ds, 400000, 499999);
-        //InsertService insertService8 = new InsertService(ds, 800000, 899999);
-
-        insertService2.start();
-        //insertService4.start();
-        //insertService8.start();
+        app.insertData(ds, 900000, 900999);
+        //app.insertData(ds, 700000, 700999);
+        //app.insertData(ds, 300000, 600999);
 
 
-        new LockWithUpdateService(ds).start();
+        new InsertService(ds, 200000, 299999).withDelay(2000).start();
+        //new InsertService(ds, 800000, 899999).withDelay(300).start();
 
-        TimeUnit.MINUTES.sleep(10);
+
+        new LockWithUpdateService(ds).withSleep(5).start();
+
+        TimeUnit.MINUTES.sleep(30);
         System.exit(0);
 
     }
@@ -106,8 +106,30 @@ public class App {
 
             conn = dataSource.getConnection();
             PreparedStatement lockSt = conn.prepareStatement(insertSql);
+
+            //故意混淆插入顺序，使得排序非常关键
             for(int i=stkIdStart; i<stkIdEndEx; i++){
-                String stkId = String.format("%06d", i);
+
+                if(i %2 == 0){
+                    continue;
+                }
+                String stkId = App.toStrStkId(i);
+
+                lockSt.setString(1, serialNum);
+                lockSt.setInt(2, ordertime);
+                lockSt.setString(3, stkId);
+                int inserteCount = lockSt.executeUpdate();
+                if(inserteCount <= 0){
+                    logger.error("insert failed:", inserteCount);
+                }
+            }
+
+            for(int i=stkIdStart; i<stkIdEndEx; i++){
+                if(i %2 == 1){
+                    continue;
+                }
+
+                String stkId = App.toStrStkId(i);
 
                 lockSt.setString(1, serialNum);
                 lockSt.setInt(2, ordertime);
@@ -121,6 +143,7 @@ public class App {
             //more time to simulate real call
             Thread.sleep(2);
             conn.commit();
+            conn.close();
 
         }catch (Exception e){
             logger.error("error", e);
@@ -128,5 +151,56 @@ public class App {
         }finally {
             App.closeConn(conn);
         }
+    }
+
+
+    static void update(Connection conn, String stkId) throws Exception{
+
+        String selectLockedSql = "update BaoyingT3Order " +
+                " set serialnum=?" +
+                "   where     serialnum=? " +
+                "         and ordertime=?" +
+                "         and exchid=?"+
+                "         and knockqty=0" +
+                "         and stkId =?"
+                ;
+
+        PreparedStatement selectStatement = conn.prepareStatement(selectLockedSql);
+        selectStatement.setString(1, serialNum);
+        selectStatement.setString(2, serialNum);
+        selectStatement.setInt(3, ordertime);
+        selectStatement.setString(4, exchid);
+        selectStatement.setString(5, stkId);
+        selectStatement.executeUpdate();
+
+        selectStatement.close();
+
+    }
+
+    static void lock(Connection conn, String stkId) throws Exception{
+
+        String selectLockedSql = "select * from BaoyingT3Order " +
+                "   where     serialnum=? " +
+                "         and ordertime=?" +
+                "         and exchid=?"+
+                "         and knockqty=0" +
+                "         and stkId =?"
+                + " for update"
+                ;
+
+        PreparedStatement selectStatement = conn.prepareStatement(selectLockedSql);
+        selectStatement.setString(1, serialNum);
+        selectStatement.setInt(2, ordertime);
+        selectStatement.setString(3, exchid);
+        selectStatement.setString(4, stkId);
+        selectStatement.executeUpdate();
+
+        selectStatement.close();
+
+    }
+
+    static String toStrStkId(int intStkId)
+    {
+        return String.format("%06d", intStkId);
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,12 @@ public class InsertService {
     private int stkStart;
     private int stkEndEx;
     private int nextInsertStkId;
+
+    private int delayMS = 2;
+
+    ScheduledExecutorService followingUpdateExecutorService = new ScheduledThreadPoolExecutor(2);
+
+
     InsertService(BasicDataSource dataSource, int stkStart, int stkEndEx){
         this.dataSource = dataSource;
         this.stkStart = stkStart;
@@ -34,8 +41,13 @@ public class InsertService {
 
         scheduledExecutorService.scheduleWithFixedDelay(()->{
             this.execute();
-        }, 1,5, TimeUnit.MILLISECONDS);
+        }, 100,delayMS, TimeUnit.MILLISECONDS);
 
+    }
+
+    public InsertService withDelay(int delay){
+        this.delayMS = delay;
+        return this;
     }
 
 
@@ -53,14 +65,35 @@ public class InsertService {
         int intNextStkId = Integer.parseInt(nextStkId);
 
         long startMS = System.currentTimeMillis();
-        logger.info("begin");
+        //logger.info("begin");
 
         App.insertData(this.dataSource, intNextStkId, intNextStkId+1);
 
-        logger.info("end, inserted:{} cost={}ms", intNextStkId, System.currentTimeMillis()-startMS);
+        //模拟真实场景，上面insert之后，再新线程中锁定并更新它
+        followingUpdateExecutorService.execute(()->{
+            Connection conn= null;
+            try{
+                long start = System.currentTimeMillis();
+                conn = dataSource.getConnection();
+                App.lock(conn, nextStkId);
+                App.update(conn, nextStkId);
+                conn.commit();
+                conn.close();
+                logger.info("lock&update the inserted row:{} - cost:{} ms", nextStkId, System.currentTimeMillis()-start);
+            }catch (Exception e){
+                logger.error("exception while update after insert", e);
+                App.rollbackConn(conn);
+            }finally {
+                App.closeConn(conn);
+            }
+
+        });
 
         this.nextInsertStkId = this.nextInsertStkId-1;
+        logger.info("end, inserted:{} cost={}ms", intNextStkId, System.currentTimeMillis()-startMS);
 
 
     }
+
+
 }

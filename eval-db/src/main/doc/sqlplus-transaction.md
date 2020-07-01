@@ -13,3 +13,7 @@ set transaction read write
 
 这里是set transaction的全部语法
 https://docs.oracle.com/cd/B28359_01/server.111/b28286/statements_10005.htm#SQLRF01705
+
+# tx日常使用
+- 默认tx隔离界别为read committed
+- 不用执行begin，直接commit就行
