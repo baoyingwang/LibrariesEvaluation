@@ -113,7 +113,9 @@ public class ChronicleQProducer {
         ChronicleQProducer producer = new ChronicleQProducer();
         producer.produceSampleText(WriteConfig.TEXT.file);
         producer.produceSelfDescribingMessage(WriteConfig.SELF_DESCRIBE.file);
-        producer.produceSampleBytesInDescribed(WriteConfig.BYTES_IN_SELF_DESCRIBE.file);
+        for(int i=0; i<255;i++) {
+            producer.produceSampleBytesInDescribed(WriteConfig.BYTES_IN_SELF_DESCRIBE.file);
+        }
 
     }
 

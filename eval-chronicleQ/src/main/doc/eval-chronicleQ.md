@@ -80,3 +80,49 @@ if(tailer.index() == 0){
 ## FAQ中明确说了可以多个reader，但是要创建不同的queue（指向相同的目录）
 ## FAQ中明确说了可以多个writer，但是单个以保证更高消息。我怀疑多个writer（不同jvm）情况，因为相互之间极可能冲突。
 以后做一些测试
+
+# 如何快速读取-没有明显的blocking wait
+- 我用作者提示的Pauser实现了一个例子方法，见ChronicleQConsumer::pauseReader(path)
+  - 就是用稍微只能一点的等待来实现类似于blockingwait的方法
+  - 如果数据量大或者连续，则batch中的第一条慢一点点，其余的就很快了
+  
+- 简而言之：不支持，只能各种折衷
+  - 作者顾左右而言他，好几年了都没有正面回答这个问题，让人觉得有点不爽
+    - https://stackoverflow.com/questions/41429878/chronicle-queue-events-listener
+  - 不支持这个不难理解，这个设计的基本思路是使用文件和native memory
+    - writer和reader之间不认知，reader无法感知新message的到来
+  - 不过，其实sdk开发者应该写一个basic使用的用法，让使用者快速上手
+    - 譬如：busy spin strategy
+    - 譬如：pauser stategy
+    - 遮掩可以极大减轻用户的第一次使用的难度
+    
+
+- 为了快速读取，可以有几个方案
+  - cpu busy spin - cpu忙等
+    - 如果是对latency及其敏感的，那么就独占一个cpu，死等
+  - FAQ：用额EventGroup，使得任务与？同线程
+    - 没看懂怎么用，作者也没有提供更多的方法
+  - FAQ：用Pauser(e.g. LongPauser)
+    - 看看这个 https://vanilla-java.github.io/tag/Microservices/ 
+  - FAQ中提到：What is the recommended pattern to implement an event listener?
+- note Puaser代码：https://www.codota.com/code/java/classes/net.openhft.chronicle.threads.Pauser
+  - 仔细看这个代码，里面还有EventLoop的东西
+- FAQ link: https://github.com/OpenHFT/Chronicle-Queue/blob/master/docs/FAQ.adoc
+
+FAQ 建议：
+With a tight reader loop, I see 100% utilization. Will there be processing capability left for anything else?
+Two approaches for reducing CPU usage are;
+- combine tasks into the same thread. EventGroup in Chronicle threads helps to do this dynamically.
+- use a Pauser such as a LongPauser to control how a thread backs off if there is nothing to do. There is a PauseMonitor to allow you to periodically print how busy each thread is.
+
+主页》FAQsub
+- https://github.com/OpenHFT/Chronicle-Queue#is-there-an-appender-to-tailer-notification
+
+# Practice
+- Creating a queue is very expensive, try to only do this once per process if you can.
+  - https://stackoverflow.com/questions/48172892/slow-queue-tailer-on-multi-threaded-appenders-queue/48175279#48175279
+- Creating a Tailer is also expensive, you should create this once and keep polling for the updates.
+  - https://stackoverflow.com/questions/48172892/slow-queue-tailer-on-multi-threaded-appenders-queue/48175279#48175279
+- Creating objects can be expensive, I would avoid creating any objects. e.g. avoid calling toString or LocalDate.now
+  - https://stackoverflow.com/questions/48172892/slow-queue-tailer-on-multi-threaded-appenders-queue/48175279#48175279
+  

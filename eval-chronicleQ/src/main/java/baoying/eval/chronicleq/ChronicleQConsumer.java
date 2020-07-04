@@ -1,9 +1,13 @@
 package baoying.eval.chronicleq;
 
+import net.openhft.chronicle.bytes.MethodReader;
 import net.openhft.chronicle.queue.ChronicleQueue;
 import net.openhft.chronicle.queue.ExcerptTailer;
 import net.openhft.chronicle.queue.impl.single.SingleChronicleQueueExcerpts;
+import net.openhft.chronicle.threads.Pauser;
 
+import javax.swing.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -147,6 +151,44 @@ public class ChronicleQConsumer {
         }
     }
 
+    public void pauseReader(String path){
+
+        String methodName= "pauseReader";
+        System.out.println("==="+methodName+"===");
+
+        try (ChronicleQueue queue = ChronicleQueue.singleBuilder(path).build()) {
+
+            //Restartable Tailers -给tailer一个名字，这样重启的时候重新读取
+            //如果不给它名字，则每次都从头读取
+            final ExcerptTailer tailer = queue.createTailer(methodName+"-as-name");
+
+            //Pauser pauser = Pauser.balanced();
+            //https://github.com/OpenHFT/Chronicle-Queue#is-there-an-appender-to-tailer-notification
+            boolean balanced = true;
+            Pauser pauser = balanced ? Pauser.balanced() : Pauser.millis(1, 10);
+            boolean closed = false;
+            AtomicInteger counter = new AtomicInteger();
+            while (!closed) {
+                boolean got = tailer.readDocument(w -> w.read("trade").marshallable(
+                        m -> {
+                            byte[] data = m.read("data").bytes();
+                            counter.incrementAndGet();
+
+                            System.out.println("got msg index:" + tailer.index() + ", counter:"+counter.get()+",client recv time:"+ Instant.now().toString() +", msg:" +new String(data));
+
+                        }));
+
+                if (got){
+                    pauser.reset();
+                }else{
+                    pauser.pause();
+                }
+
+            }
+            ((SingleChronicleQueueExcerpts.StoreTailer)tailer).releaseResources();
+        }
+    }
+
     public static void main(String[] args){
 
         ChronicleQConsumer consumer = new ChronicleQConsumer();
@@ -154,6 +196,6 @@ public class ChronicleQConsumer {
         consumer.reConsumeTheEndSample(WriteConfig.TEXT.file);
         consumer.nonblockingConsumeSelfDescribingMessage(WriteConfig.SELF_DESCRIBE.file);
         consumer.nonblockingConsumeBytesInSelfDescribeSample(WriteConfig.BYTES_IN_SELF_DESCRIBE.file);
-
+        consumer.pauseReader(WriteConfig.BYTES_IN_SELF_DESCRIBE.file);
     }
 }
