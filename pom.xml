@@ -122,6 +122,7 @@
     <module>eval-redis</module>
     <module>eval-db</module>
     <module>eval-aeron</module>
+    <module>eval-chronicleQ</module>
   </modules>
   <!-- manual 添加 - 上传到远端nexus/maven仓库 - 执行mvn deploy时候-->
   <distributionManagement>

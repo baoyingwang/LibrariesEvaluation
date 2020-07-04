@@ -16,5 +16,10 @@
 	  <artifactId>chronicle-queue</artifactId>
 	  <version>5.19.32</version>
 	</dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+    </dependency>
   </dependencies>
 </project>
