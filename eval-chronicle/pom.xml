@@ -19,8 +19,8 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>eval-chronicleQ</artifactId>
-  <name>eval-chronicleQ</name>
+  <artifactId>eval-chronicle</artifactId>
+  <name>eval-chronicle</name>
 
   <dependencies>
 

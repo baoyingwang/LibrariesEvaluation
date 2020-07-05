@@ -9,6 +9,7 @@
 
   <artifactId>eval-js</artifactId>
   <name>eval-js</name>
-
-
+  <modules>
+    <module>eval-js-c3d3</module>
+  </modules>
 </project>

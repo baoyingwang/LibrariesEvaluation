@@ -6,8 +6,8 @@
     <groupId>baoying</groupId>
     <version>${revision}</version>
   </parent>
-  <artifactId>eval-spring-boot</artifactId>
-  <name>eval-spring-boot</name>
+  <artifactId>eval-spring-cloud</artifactId>
+  <name>eval-spring-cloud</name>
 
 
   <properties>

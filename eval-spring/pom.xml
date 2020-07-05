@@ -15,6 +15,7 @@
 
   <modules>
     <module>eval-spring-boot</module>
+    <module>eval-spring-cloud</module>
   </modules>
 
 

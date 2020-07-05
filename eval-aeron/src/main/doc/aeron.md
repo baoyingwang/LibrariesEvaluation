@@ -1,5 +1,15 @@
 [TOC]
 # Overview
+- Aeron是基于UDP的高性能协议和lib。
+  - best practice文档中说了，上百个Channel/Stream就顶天了，别到1000。如果那么多的话，需要高层的协议
+  - reliable multicast operation for modest receiver set size (< 100 receivers)
+- RSocket支持使用多种底层协议，包括Aeron - http://rsocket.io
+  - RSocket是one-to-one沟通的，所以不支持广播
+    - https://rsocket.io/docs/Protocol.html
+    - one-to-one communication
+  - 倒是可以作为高速接入的方式
+    - 但是接入方式使用它的话，还要给客户一个封装的lib，否则有点费劲
+
 - https://github.com/real-logic/aeron/
 - 其阻塞控制是关键点之一
   - 其有多种阻塞控制模式，有使用者决定选中哪个
@@ -7,6 +17,28 @@
   - 譬如：如果有任何一个slow consumer，则发送端并不管，继续发。slow的那个就丢数据了
   - 参考：https://blog.csdn.net/danpu0978/article/details/106765813
     - 这是对本篇对中文翻译https://www.javacodegeeks.com/2020/03/flow-control-in-aeron.html
+    
+# Aeron具体功能研究
+- 基本功能：局域网low latency广播
+  - 如何写这部分代码
+
+- 质量需求：消息不丢失
+  - 原理是什么
+  - 设计和实施几个测试case，验证它
+  - 出现问题时候如何发现，以及可能的补偿
+  
+- 封装基本代码，后序供matching使用  
+
+
+# 基本功能：局域网low latency广播
+
+# 质量需求：消息不丢失
+- 原理是什么
+- 设计和实施几个测试case，验证它
+- 出现问题时候如何发现，以及可能的补偿
+  
+# 封装基本代码，后序供matching使用    
+
 
 # 下面待整理
 - 需要搞清楚依赖到底用哪个，all, client, driver都有什么区别
