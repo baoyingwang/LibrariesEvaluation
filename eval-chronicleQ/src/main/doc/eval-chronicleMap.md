@@ -2,7 +2,7 @@
 # Overview
 https://github.com/OpenHFT/Chronicle-Map
 - off-heap map
-- 用起来和cncurrentmap很像
+- 用起来和concurrentmap很像
 - 可以在相同jvm使用，也可以跨jvm使用
 - 不能跨机器
 
@@ -34,14 +34,15 @@ Refer: https://github.com/OpenHFT/Chronicle-Map/blob/master/docs/CM_Tutorial.ado
 |chronicleMap-memory|off-heap|7167ms/3522ms|0.7167us/0.3522us|56320K|8661K|2K|--|
 |chronicleMap-file|off-heap|11184ms/3569ms|1.1184us/0.3569us|36964K|8628K|2K|--|
 
+- 测试结果解析
+  - chronicleMap的off-heap特性非常明显
+  - chronicleMap比JDK ConcurrentHashmap要慢一倍到两倍
+    - 文件方式比内存方式还要慢一点
+    - 所以，只有比较大量的数据使用ChronicleMap才有意义。对于数量很小，或者存取频繁的数据，要慎重使用
+  - chronicleMap的performance与其官方描述是一致的，基本小于1us（纳秒）的存取 
 
 
-
-- chronicleMap慢一些, put慢 15～100%左右， took慢50～200%
-  - 已经排除了创建map时间，考虑到chronicleQ可能要初始化文件
-- chronicleMap基本没有使用heap - 这个对比太明显了
-  - old gen used 12M vs 1G
-
+测试中的log输出
 ```java
 Name: G1 Eden Space: init = 26214400(25600K) used = 25165824(24576K) committed = 91226112(89088K) max = -1(-1K)
 Name: G1 Old Gen: init = 108003328(105472K) used = 1139589120(1112880K) committed = 1653604352(1614848K) max = 2147483648(2097152K)
