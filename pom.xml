@@ -127,6 +127,9 @@
     <module>eval-aeron</module>
     <module>eval-chronicle</module>
     <module>eval-json</module>
+
+    <module>eval-test</module>
+
   </modules>
   <!-- manual 添加 - 上传到远端nexus/maven仓库 - 执行mvn deploy时候-->
   <distributionManagement>
