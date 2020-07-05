@@ -3,7 +3,9 @@
 https://github.com/OpenHFT/Chronicle-Map
 - off-heap map
 - 用起来和concurrentmap很像
-- 可以在相同jvm使用，也可以跨jvm使用
+- 也可以跨jvm使用 via 文件模式
+  - 一个jvm写，另一个（或者几个）负责读
+  - 如果是单个jvm使用则无需文件
 - 不能跨机器
 
 # Practice
@@ -17,6 +19,15 @@ mount the file on tmpfs.
 For example, on Linux it is as easy as placing you file in /dev/shm directory."
 Refer: https://github.com/OpenHFT/Chronicle-Map/blob/master/docs/CM_Tutorial.adoc#chroniclemap-instance-vs-chronicle-map-data-store
 
+## 提供平均key/value的大小，可以获得更好性能
+- 这样，其可以预先分配好相关资源
+  - e.g averageKey("Amsterdam")
+  - e.g.averageValue(new long[150])， constantKeySizeBySample(UUID.randomUUID())
+- 参考 https://github.com/OpenHFT/Chronicle-Map/blob/master/docs/CM_Tutorial.adoc#key-and-value-types
+
+## 文件维护/一般的应用在维护时候（每晚或者每周末）都应该停机把数据移走
+## name字段用于标识，没发现什么实际用处
+- 快速检查了代码，出现错误时候name在出错信息中方便识别
 
 # Performance - 
 
@@ -30,7 +41,7 @@ Refer: https://github.com/OpenHFT/Chronicle-Map/blob/master/docs/CM_Tutorial.ado
 
 |case|memory|put时间/get时间:ALL|put时间get时间:平均每条|EdenUsed|OldGenUsed|SurvivorUsed|Note|
 |----|----|----|-----|----|----|----|----|
-|hashmap|heap|3858ms/1950ms| 0.3858us/0.195us |24576K|1112880K|2k|--|
+|JDKConcurrentHashmap|heap|3858ms/1950ms| 0.3858us/0.195us |24576K|1112880K|2k|--|
 |chronicleMap-memory|off-heap|7167ms/3522ms|0.7167us/0.3522us|56320K|8661K|2K|--|
 |chronicleMap-file|off-heap|11184ms/3569ms|1.1184us/0.3569us|36964K|8628K|2K|--|
 

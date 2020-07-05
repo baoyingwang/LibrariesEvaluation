@@ -1,4 +1,4 @@
-package baoying.eval.chronicleq;
+package baoying.eval.chronicleq.sample;
 
 
 import net.openhft.chronicle.queue.ChronicleQueue;

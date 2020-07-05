@@ -1,12 +1,10 @@
-package baoying.eval.chronicleq;
+package baoying.eval.chronicleq.sample;
 
-import net.openhft.chronicle.bytes.MethodReader;
 import net.openhft.chronicle.queue.ChronicleQueue;
 import net.openhft.chronicle.queue.ExcerptTailer;
 import net.openhft.chronicle.queue.impl.single.SingleChronicleQueueExcerpts;
 import net.openhft.chronicle.threads.Pauser;
 
-import javax.swing.*;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;

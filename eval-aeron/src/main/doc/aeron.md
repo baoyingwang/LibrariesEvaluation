@@ -1,3 +1,14 @@
+[TOC]
+# Overview
+- https://github.com/real-logic/aeron/
+- 其阻塞控制是关键点之一
+  - 其有多种阻塞控制模式，有使用者决定选中哪个
+  - 譬如：如果有任何一个slow consumer，则发送端减慢速度
+  - 譬如：如果有任何一个slow consumer，则发送端并不管，继续发。slow的那个就丢数据了
+  - 参考：https://blog.csdn.net/danpu0978/article/details/106765813
+    - 这是对本篇对中文翻译https://www.javacodegeeks.com/2020/03/flow-control-in-aeron.html
+
+# 下面待整理
 - 需要搞清楚依赖到底用哪个，all, client, driver都有什么区别
 
 - 我关注的功能在于

@@ -1,7 +1,14 @@
 [TOC]
 
 # Overview
-ChronicleQ/ChronicleMap是performance tuning后的数据结构
+ChronicleQ是performance tuning后的数据结构
+- 用于跨jvm之间的通信
+  - 如果是单jvm内部使用queue的话，有其他更好的方案
+    - 譬如直接JDK Blocking Queue
+    - 譬如LMAX的Disruptor
+    - 不过这些都不是off-heap都  
+- 基于文件
+  - ChronicleMap则可以不用文件（如果相同jvm），但是ChronicleQ必须用文件
 - off-heap
 - ultra-low latency
 
@@ -125,4 +132,10 @@ Two approaches for reducing CPU usage are;
   - https://stackoverflow.com/questions/48172892/slow-queue-tailer-on-multi-threaded-appenders-queue/48175279#48175279
 - Creating objects can be expensive, I would avoid creating any objects. e.g. avoid calling toString or LocalDate.now
   - https://stackoverflow.com/questions/48172892/slow-queue-tailer-on-multi-threaded-appenders-queue/48175279#48175279
-  
+- 升级数据结构-但是原来数据不需要保留
+  - 直接将原来文件目录移走即可
+- 数据文件rolling
+  - 正确设定rolling的时间点和时间间隔
+  - 其默认是UTC mid-night /daily rolling
+  - 每次创建这个queue文件都要设定rolling时间。所以可以在应用中创建一个wrapper，设定固定的rolling时间，避免每次都创建
+   

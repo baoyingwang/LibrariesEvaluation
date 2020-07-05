@@ -1,4 +1,4 @@
-package baoying.eval.chronicleq;
+package baoying.eval.chronicleq.sample;
 
 public enum WriteConfig {
     TEXT("/tmp/chronicleQ.sample.text"),
