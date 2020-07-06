@@ -16,20 +16,14 @@ public class AsyncSub {
         String channel = "channel01";
         Jedis jedis = new Jedis("localhost");
 
-
-        CountDownLatch latch = new CountDownLatch(1);
-        new Thread(()->{
-            jedis.subscribe(new JedisPubSub() {
-                @Override
-                public void onMessage(String channel, String message) {
-                    System.out.println("Tricky - Thread:"+Thread.currentThread().getName()+" channel:"+channel +" message:" + message);
-                }
-            }, channel);
-            latch.countDown();
-        }).start();
-        latch.await();
-
         JedisPubSubImpl pubSub = new JedisPubSubImpl();
+        new Thread(()->{
+            //通过这里执行subscribe，使得jedis内部的client field初始化好了
+            //然后后面直接嗲用pubSub.subscribe(channel)都好用
+            jedis.subscribe(pubSub, channel);
+        }).start();
+
+        Thread.sleep(1000);
         pubSub.subscribe(channel);
 
         System.out.println("sleeping");

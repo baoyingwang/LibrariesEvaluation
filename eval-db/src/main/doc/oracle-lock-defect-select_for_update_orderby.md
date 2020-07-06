@@ -1,5 +1,6 @@
 
-# 11.2 有这个bug
+# Oracle 11.2 有这个bug - select * from table order by y for update不能保证顺序
+
 本文由描述，和如何重现
 http://orasql.org/2013/02/16/workaround-for-deadlock-with-select-for-update-order-by-on-11-2-0-2-11-2-0-3/
 
@@ -17,6 +18,5 @@ ask Tom说先lock再order by（http://asktom.oracle.com/pls/asktom/f?p=100:11:0:
 https://community.oracle.com/thread/871785?start=0&tstart=0
 
 
-# EXT
-select for update时候的死锁和建议
+# select for update时候的死锁和建议
 https://stackoverflow.com/questions/14755222/oracle-select-order-by-for-update-deadlock
