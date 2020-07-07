@@ -28,6 +28,9 @@ public class Lambda_ExceptionEval {
 
         List<String> names = new ArrayList<>();
         names.add("John");
+
+        //理解了这就是一个Consumer、Predict、Function.Supplier等接口调用之后
+        // 这个就非常好明白Exception的行为了
         names.forEach( it ->{
             //throw new Exception("");  <- 语法错误，因为Consumer接口限制
             //throw new RuntimeException("only for test in x.forEach"); ok here
@@ -47,5 +50,8 @@ public class Lambda_ExceptionEval {
             System.out.println(it);
             throw new RuntimeException("only for test in x.stream().forEach");
         });
+
+        names.parallelStream();
+
     }
 }
