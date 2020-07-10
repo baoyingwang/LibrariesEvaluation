@@ -16,3 +16,7 @@
 /eval-interview/src/main/python
 /**/.DS_Store
 /**/*iml
+
+/**/.vs
+/**/bin
+/**/obj
