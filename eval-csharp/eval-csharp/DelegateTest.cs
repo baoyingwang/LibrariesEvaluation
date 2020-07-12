@@ -69,7 +69,7 @@ namespace eval_csharp
 
             Assert.AreEqual(2, callTrace.Count);
             Assert.AreEqual("Console 1 - 1", callTrace[0]);
-            Assert.AreEqual("Console 2 - 1", callTrace[0]);
+            Assert.AreEqual("Console 1 - 2", callTrace[1]);
         }
 
         /**
