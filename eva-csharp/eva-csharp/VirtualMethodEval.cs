@@ -75,15 +75,22 @@ namespace eva_csharp
         {
         }
 
+        /**
+         * 
+         * CLR&C# CN v4 P151/152/153中讲述了这个
+         * 
+         */
         public void eval() {
 
             Console.WriteLine("== begin p1");
             Parent p1 = new Child();
             p1.normal_1();         //调用父类的方法，因为父类方法不是virtual的，这是与java完全不同的地方。java默认全部使用child的方法（没有virtual这类的修饰符）。
-            p1.normal_2_virtual(); //调用父类的方法，虽然父类方法是virtual，单child中用的new，所以Parent与Child之间完全没有
+            p1.normal_2_virtual(); //调用父类的方法，虽然父类方法是virtual，但child中用的new，所以Parent与Child之间完全没有
             p1.v_normal(); //调用子类的方法，因为该方法是virtual的
             p1.v_normal_call_virtual(); //这个父类函数内部调用到了virtual(Parent)+override(Child)函数，所以函数内部最终调用为子类
             p1.v_normal_call_virtual_2();//这个父类函数内部调用到了virtual(Parent)+new(Child)函数，所以函数内部最终调用父类方法
+
+            this.eval(p1);
 
             Console.WriteLine("== begin c1");
             Child c1 = new Child();
@@ -92,6 +99,24 @@ namespace eva_csharp
             c1.v_normal();
             c1.v_normal_call_virtual();
 
+            //特别注意，这里虽然c1作为参数，但是调用结果与this.eval(p1);是一样的
+            //与上面c1的调用结果是不同的
+            this.eval(c1);
+
+
+        }
+
+        //特别注意，因为这里的参数是Parent类型
+        //即使你传进来的时候是Child类型，则只有Parent（virtual）+Child（override）才会调用child，其余全部parent
+        private void eval(Parent p1) {
+
+            Console.WriteLine("== invokation - parent is from method");
+
+            p1.normal_1();         //调用父类的方法，因为父类方法不是virtual的，这是与java完全不同的地方。java默认全部使用child的方法（没有virtual这类的修饰符）。
+            p1.normal_2_virtual(); //调用父类的方法，虽然父类方法是virtual，单child中用的new，所以Parent与Child之间完全没有
+            p1.v_normal(); //调用子类的方法，因为该方法是virtual的
+            p1.v_normal_call_virtual(); //这个父类函数内部调用到了virtual(Parent)+override(Child)函数，所以函数内部最终调用为子类
+            p1.v_normal_call_virtual_2();//这个父类函数内部调用到了virtual(Parent)+new(Child)函数，所以函数内部最终调用父类方法
 
         }
     }
