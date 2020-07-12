@@ -1,5 +1,5 @@
 ﻿using System;
-namespace eva_csharp
+namespace eval_csharp
 {
     public class Field_vs_Property
     {
@@ -7,7 +7,7 @@ namespace eva_csharp
         {
         }
 
-        //来自于：https://stackoverflow.com/questions/295104/what-is-the-difference-between-a-field-and-a-property
+        //这个代码例子来自于：https://stackoverflow.com/questions/295104/what-is-the-difference-between-a-field-and-a-property
 
         /**
          * 
