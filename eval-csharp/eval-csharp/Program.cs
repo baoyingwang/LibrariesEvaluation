@@ -16,8 +16,9 @@ namespace eval_csharp
         {
 
             Console.WriteLine("args length:"+ args.Length);
-            VirtualMethodEval virtualMethodEval = new VirtualMethodEval();
-            virtualMethodEval.eval();
+            //VirtualMethodEval virtualMethodEval = new VirtualMethodEval();
+            //virtualMethodEval.eval();
+            eval_csharp.LinqExample.Program.Main(null);
 
         }
     }

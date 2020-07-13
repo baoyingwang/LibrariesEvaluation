@@ -28,7 +28,13 @@ namespace eva_csharp
             {
                 Console.WriteLine("a < b");
             }
-        
+
+
+            //https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/exploration/csharp-6?tutorial-step=6
+            string s = null;
+            bool? hasMore = s?.ToCharArray()?.GetEnumerator()?.MoveNext();
+            var x = hasMore.HasValue && hasMore.Value;
+            Console.WriteLine(x);
         }
     }
 }
