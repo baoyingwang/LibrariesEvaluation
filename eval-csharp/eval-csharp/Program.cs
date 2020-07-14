@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace eval_csharp
 {
@@ -16,8 +17,11 @@ namespace eval_csharp
         {
 
             Console.WriteLine("args length:"+ args.Length);
-            VirtualMethod_ClassEval virtualMethodEval = new VirtualMethod_ClassEval();
-            virtualMethodEval.eval();
+
+            foreach (var x in Enumerable.Range(11, 4)) {
+                Console.WriteLine(x);
+            }
+
         }
     }
 }

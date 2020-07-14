@@ -75,7 +75,17 @@ namespace eval_csharp
             Assert.IsFalse(greeting.StartsWith("Hello1"));
             Assert.IsTrue(greeting.EndsWith("d!"));
             Assert.IsFalse(greeting.EndsWith("d!0"));
+        }
 
+        //就是以@开头的字符串，其里面的字符不进行escape
+        //譬如 @"abc\n123", 其中的"\n"就是俩字符
+        [Test]
+        public void testVerbatim() {
+            //https://www.c-sharpcorner.com/uploadfile/hirendra_singh/verbatim-strings-in-C-Sharp-use-of-symbol-in-string-literals/
+
+            String verbatim = @"abc\n123";
+            Assert.AreEqual('\\', verbatim[3]);
+            Assert.AreEqual('n',verbatim[4]);
 
         }
     }
