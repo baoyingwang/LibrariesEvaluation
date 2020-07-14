@@ -9,8 +9,34 @@ namespace eval_csharp.LinqEval
 
     /**
      * 给在线代码增加一些注释https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/working-with-linq
-     * 20200714 现在其行为绝大部分都明白了，就是指数级增长需要再想一想
+     *
+     * 下面给了出counter=3的情况下的执行情况，基本解释的指数级增长情况
+     * - 通过下面的主次调用关系，可以清楚的看到最后的调用次数的指数级增长
+     * - 每次调用(2.4, 3.4, 4.4)自身的循环次数也会变多（不考虑lazy情况下），因为随着shuffle的进行，越来越多的heading元素相同，需要比较多次才能发现不同
+     * - 重点解释2.4
+     *   - 其同top，bottom两个，达到的翻倍的效果
+     *   - 最终调用1.3的时候，每次执行都要把1.2调用一遍，这个是要了命的地方之一
+     *   - BTW：去看LinqLazyLoadingEval.testEnumerableLazyLoading_Middle()中的例子可以发现
+     *     - 即使不是这种指数级的增长，每次遍历1.3， 都会导致1.2重新执行一遍
+     *     - 也就是是即使普通的重新遍历，都会线性增长
+     * 1. 1.1 suit - lazy                      .Suits() - 1.1
+     *    1.2 rank - lazy                      .SelectMany(suit =>Ranks().LogQuery("Rank Generation").Select(rank =>new { Suit = suit, Rank = rank } 1.2+1.3
+     *    1.3 combine 1.1 and 1.2 - lazy
+     *    
+     * 2. 2.1 top    of 1.3 - lazy
+     *    2.2 bottom of 1.3 - lazy
+     *    2.3 interleave of 2.1 and 2.2 - lazy
+     *    2.4 compare 1.3 and 2.3 这里通过2.4=>2.3=>2.1, 2.2 => 1.3 => 1.1, 1.2 的调用链，执行rank的次数×2
      * 
+     * 3. 3.1 top    of 2.3 - lazy
+     *    3.2 bottom of 2.3 - lazy
+     *    3.3 interleave of 3.1 and 3.2 - lazy
+     *    3.4 compare 1.3 and 3.3 这里最后指向上一层 3.4=>3.3=>3.1,3.2=>2.3 调用再次次数×2
+     *    
+     * 4. 4.1 top    of 3.3 - lazy
+     *    4.2 bottom of 3.3 - lazy
+     *    4.3 interleave of 4.1 and 4.2 - lazy
+     *    4.4 compare 1.3 and 4.3 这里最后指向上一层 4.4=>4.3=>4.1,4.2=>3.3 调用再次次数×2
      */
     public class LinqEval_Advance
     {

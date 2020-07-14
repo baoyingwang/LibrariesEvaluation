@@ -48,7 +48,8 @@ namespace eval_csharp.LinqEval
         }
 
         /**
-         *
+         * 这个例子中可以看到：重复遍历同一个Enumerable，其都将Linq查询全部重新执行一遍
+         * 由此可以看出：如果你的数据集要多次遍历的话，使用eager evaluation
          */
         [Test]
         public void testEnumerableLazyLoading_Middle()
