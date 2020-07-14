@@ -28,7 +28,12 @@ namespace eval_csharp
     //这是带测试的delegation
     internal delegate void Feedback(Int32 value);
 
-    //[TestFixture]
+    /**
+     * 
+     * delete就是回调，把方法当成参数传来传去。和Java8中增加的lambda/Function类似。
+     * note：这就增加了一些复杂度，因为形成了这么一个chain之后，就涉及到增加重复以及如何删除等。下面增加额外的case来处验证它
+     * 
+     */
     public class DelegateTest
     {
 
@@ -56,10 +61,7 @@ namespace eval_csharp
             }
         }
 
-        /**
-         * delete就是回调，把方法当成参数传来传去。和Java8中增加的lambda/Function类似。
-         * note：这就增加了一些复杂度，因为形成了这么一个chain之后，就涉及到增加重复以及如何删除等。下面增加额外的case来处验证它
-         */
+
         [Test]
         public void SimpleDelegation()
         {
