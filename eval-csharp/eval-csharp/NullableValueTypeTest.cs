@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 
-namespace eva_csharp
+namespace eval_csharp
 {
     class NullableValueTypeTest
     {
