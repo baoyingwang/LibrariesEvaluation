@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
-namespace eval_csharp.LinqEval
+namespace eval_csharp
 {
 
     /**
@@ -38,9 +38,9 @@ namespace eval_csharp.LinqEval
      *    4.3 interleave of 4.1 and 4.2 - lazy
      *    4.4 compare 1.3 and 4.3 这里最后指向上一层 4.4=>4.3=>4.1,4.2=>3.3 调用再次次数×2
      */
-    public class LinqEval_Advance
+    public class LinqEval_LazyLoading_Advance
     {
-        public LinqEval_Advance()
+        public LinqEval_LazyLoading_Advance()
         {
         }
 

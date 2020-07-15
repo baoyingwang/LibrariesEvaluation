@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
-namespace eval_csharp.LinqEval
+namespace eval_csharp
 {
-    class LinqLazyLoadingEval
+    class LinqEval_LazyLoading
     {
 
 

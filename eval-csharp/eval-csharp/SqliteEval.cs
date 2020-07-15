@@ -59,6 +59,8 @@ using NUnit.Framework;
  *      - 该工具在此讨论中给出 https://stackoverflow.com/questions/52225503/generate-c-sharp-class-from-sql-server-table
  *      - 该工具实在本地浏览器中运行的js脚本，stackoverflow讨论组作者（jonathana ）现身提到这一点
  * 
+ * - 折腾一大圈回到原点
+ *   - Ling to Sql class 只支持Sql Server， 不支持从Sqlite生成这些class之类的。
  */
 namespace eval_csharp.db
 { 
@@ -79,6 +81,7 @@ namespace eval_csharp.db
 
             using var con = new SqliteConnection(cs);
             con.Open();
+
             using var cmd = new SqliteCommand(stm, con);
 
             string version = cmd.ExecuteScalar().ToString();
@@ -107,6 +110,8 @@ namespace eval_csharp.db
         public void testFileDB()
         {
 
+            //这里的id使用int（而没有用long），是应为下面在线工具不支持long
+            //在线工具 https://codverter.com/src/index
             var tableProejct = @"drop table if exists Project;
                                 create table Project(
 	                                projectid int,
@@ -143,7 +148,7 @@ UserType varchar(255)
 
             String[] createTablesSql = { tableProejct, notificationSubscription, tableDefect, tableUser };
 
-            var sqlite3filename = "sqlite3.db.ignore";
+            var sqlite3filename = "d:/sqlite3.db.ignore";
             using var con = new SqliteConnection($"Data Source={sqlite3filename}");
             con.Open();
 

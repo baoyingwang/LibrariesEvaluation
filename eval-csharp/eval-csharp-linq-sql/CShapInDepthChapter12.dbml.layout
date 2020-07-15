@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12.5, 8.5" name="DataClasses1">
+  <DataContextMoniker Name="/DataClasses1DataContext" />
+  <nestedChildShapes>
+    <classShape Id="a3aaaf1b-50cb-4cf1-ba8b-893335f98372" absoluteBounds="3.5, 2.125, 2, 2.5401025390625">
+      <DataClassMoniker Name="/DataClasses1DataContext/Defect" />
+      <nestedChildShapes>
+        <elementListCompartment Id="bf0b679c-ac21-42ae-ad19-36399b7dacf0" absoluteBounds="3.5150000000000006, 2.585, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="bd29da81-8edd-4f76-9f20-70f7c105aeb4" absoluteBounds="3.625, 0.5, 2, 1.1939925130208335">
+      <DataClassMoniker Name="/DataClasses1DataContext/Project" />
+      <nestedChildShapes>
+        <elementListCompartment Id="88e29ddd-f0d3-4daa-93b4-2ca3de95504a" absoluteBounds="3.64, 0.96, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a4e0f8f3-47b0-4984-8740-1f8efa8ddbf2" absoluteBounds="3.5, 5.375, 2, 1.3862939453125">
+      <DataClassMoniker Name="/DataClasses1DataContext/DefectUser" />
+      <nestedChildShapes>
+        <elementListCompartment Id="27d8e943-5e9c-4b20-90ba-b40aba82c3cb" absoluteBounds="3.515, 5.835, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="3b620836-1a97-495d-ae8a-d3503322afc8" absoluteBounds="10.25, 0.625, 2, 1.3862939453125005">
+      <DataClassMoniker Name="/DataClasses1DataContext/NotificationSubscription" />
+      <nestedChildShapes>
+        <elementListCompartment Id="266e22fb-6891-4530-97d5-a97c866a62a1" absoluteBounds="10.265, 1.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.5625 : 1.69399251302083); (4.5625 : 2.125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/Project/Project_Defect" />
+      <nodes>
+        <classShapeMoniker Id="bd29da81-8edd-4f76-9f20-70f7c105aeb4" />
+        <classShapeMoniker Id="a3aaaf1b-50cb-4cf1-ba8b-893335f98372" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.5 : 5.375); (4.5 : 4.6651025390625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/DefectUser/DefectUser_Defect" />
+      <nodes>
+        <classShapeMoniker Id="a4e0f8f3-47b0-4984-8740-1f8efa8ddbf2" />
+        <classShapeMoniker Id="a3aaaf1b-50cb-4cf1-ba8b-893335f98372" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.0625 : 5.375); (5.0625 : 4.6651025390625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/DefectUser/DefectUser_Defect1" />
+      <nodes>
+        <classShapeMoniker Id="a4e0f8f3-47b0-4984-8740-1f8efa8ddbf2" />
+        <classShapeMoniker Id="a3aaaf1b-50cb-4cf1-ba8b-893335f98372" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.625 : 1.15949625651042); (10.25 : 1.15949625651042)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClasses1DataContext/Project/Project_NotificationSubscription" />
+      <nodes>
+        <classShapeMoniker Id="bd29da81-8edd-4f76-9f20-70f7c105aeb4" />
+        <classShapeMoniker Id="3b620836-1a97-495d-ae8a-d3503322afc8" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
