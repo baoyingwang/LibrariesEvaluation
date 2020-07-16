@@ -14,9 +14,9 @@ namespace eval_csharp
      *   - C#引入了Tasks去做更精妙的控制，见ThreadEval_Tasks.cs
      * 
      */
-    public class ThreadEval_QueuUserWorkItem
+    public class ThreadEval_QueueUserWorkItem
     {
-        public ThreadEval_QueuUserWorkItem()
+        public ThreadEval_QueueUserWorkItem()
         {
         }
 

@@ -11,6 +11,7 @@ namespace eval_csharp
             return x + "," + y;
         }
     }
+
     class Program
     {
         static void Main(string[] args)
@@ -18,10 +19,16 @@ namespace eval_csharp
 
             Console.WriteLine("args length:"+ args.Length);
 
-            foreach (var x in Enumerable.Range(11, 4)) {
+            foreach (var x in Enumerable.Range(11, 1)) {
                 Console.WriteLine(x);
             }
 
+                        foreach (var x in Enumerable.Range(11, 4)) {
+                Console.WriteLine(x);
+            }
+
+
         }
+
     }
 }

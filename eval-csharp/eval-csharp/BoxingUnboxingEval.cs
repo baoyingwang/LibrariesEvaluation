@@ -4,7 +4,13 @@ using NUnit.Framework;
 namespace eval_csharp
 {
 
-
+    /**
+     * 
+     *值类型和class类型还有很大区别，譬如
+     *  - 值类型默认stack上分配内存，但是装箱后则在heap上有一份。装箱一般是cast成object时候（方法调用时候类型为object）
+     *  - 值类型不用new，也没有nullpointer，直接默认分配了空间
+     * 
+     */
     public class BoxingUnboxingEval
     {
         public BoxingUnboxingEval()

@@ -87,6 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CShapInDepthChapter12.dbml</DependentUpon>
     </Compile>
+    <Compile Include="LinqToSqlEval.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

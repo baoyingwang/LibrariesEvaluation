@@ -5,6 +5,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eval-csharp", "eval-csharp\eval-csharp.csproj", "{24E20FEC-1CB0-48DF-B5D3-A95C81DE9AAD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFAE0DAC-5F32-4285-89CE-92DB1654083F}"
+	ProjectSection(SolutionItems) = preProject
+		ParallelEval.txt = ParallelEval.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eval-csharp-linq-to-sql", "eval-csharp-linq-sql\eval-csharp-linq-to-sql.csproj", "{000670BF-BED5-4CC4-8731-700EB3E209F3}"
 EndProject

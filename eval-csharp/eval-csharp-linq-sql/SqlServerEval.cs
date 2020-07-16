@@ -20,7 +20,7 @@ using NUnit.Framework;
 namespace eval_csharp.db
 { 
 
-    class EnableSqlite
+    class SQLServerEval
     {
 
         [Test]
