@@ -17,9 +17,11 @@ namespace eval_csharp
     {
 
         /**
-         * for循环的parallel版
-         * foreach的parallel版
-         * invoke多个方法（并行）
+         * - 数据并行性（调用相同代码，不同数据)
+         *   - for循环的parallel版
+         *   - foreach的parallel版
+         * - 任务并行性(调用不同地方）·
+         *   - invoke多个方法（并行）
          * 
          * 如果调用方法任意一个有异常，则总方法抛出AggregateException
          */

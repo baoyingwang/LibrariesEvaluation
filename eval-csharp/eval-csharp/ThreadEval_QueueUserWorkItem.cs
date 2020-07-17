@@ -129,6 +129,9 @@ namespace eval_csharp
             ThreadPool.QueueUserWorkItem(state => testCancellationTokenSource_callback(cts.Token, 1, 2));
             cts.Cancel();//看文档描述，这个空参数的类似与Cancel(true)
             //cts.Cancel(true/false) 是否：throwOnFirstException，即是否有问题时候执行一半 。 
+            //注意：这里callback的检查方式是token.IsCancellationRequested，它是不会throw异常的
+            //     但是，在ThreadEval_Tasks::testTasks_cancel（）中，我们是通过抛异常来停止的token.ThrowIfCancellationRequested()
+            //     使用不同的检查方式，是因为本case（QueueUserWorkItem不返回值），而Task那里需要返回值（需要区别正常返回还是cancel返回，如果是cancel返回就有异常）
 
 
             //其他功能：还能link多个token到一起，这样cancel1个的话，另一个也cancel了

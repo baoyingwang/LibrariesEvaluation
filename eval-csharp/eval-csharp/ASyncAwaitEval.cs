@@ -33,11 +33,6 @@ namespace eval_csharp
     class ASyncAwaitEval
     {
      
-        //这是一个Utility方法
-        public static void TraceThreadAndTask(String info) {
-            String taskInfo = Task.CurrentId == null ? "no task" : "task " + Task.CurrentId;
-            Console.WriteLine($"{DateTime.Now} {info} in thread {Thread.CurrentThread.ManagedThreadId}" + $" and {taskInfo}");
-        }
 
 
         //这个类中包含一个按照约定而模拟的一个GreetingAsync方法
@@ -49,15 +44,15 @@ namespace eval_csharp
             {
                 Task<String> result = Task.Run<String>(() =>
                 {
-                    TraceThreadAndTask($"running {nameof(GreetingAsync)}");
+                    ThreadEval_Util.TraceThreadAndTask($"running {nameof(GreetingAsync)}");
                     return Greeting(name);
                 });
                 return result;
             }
             private String Greeting(String name)
             {
-                TraceThreadAndTask($"running {nameof(Greeting)}");
-                Task.Delay(3000).Wait();
+                ThreadEval_Util.TraceThreadAndTask($"running {nameof(Greeting)}");
+                Task.Delay(500).Wait();
                 return $"Hello, {name}";
             }
 
@@ -67,24 +62,26 @@ namespace eval_csharp
         public void testGreetingClient()
         {
             //下面是这个过程的输出
-            //2020/7/16 21:59:50 testGreetingClient enter in thread 13 and no task
-            //2020/7/16 21:59:50 callGreetingClientAsync enter in thread 13 and no task
-            //2020/7/16 21:59:50 running GreetingAsync in thread 11 and task 1
-            //2020/7/16 21:59:50 running Greeting in thread 11 and task 1
-            //2020/7/16 21:59:50 testGreetingClient got Task<String> greetingResult, and next to get greetingResult.Result in thread 13 and no task
-            //2020/7/16 21:59:53 callGreetingClientAsync done in thread 11 and no task
-            //2020/7/16 21:59:53 testGreetingClient done - got greetingResult.Result:Hello, HanMeiMei in thread 13 and no task
-            ThirdPartyAsyncSimulator greetingClient = new ThirdPartyAsyncSimulator();
-            //线程A - 调用者当前线程
-            TraceThreadAndTask($"{nameof(testGreetingClient)} enter");
-            Task<String> greetingResult = callGreetingClientAsync();
+            //2020.07.17 10:11:55:536 testGreetingClient enter in thread 13 and no task
+            //2020.07.17 10:11:55:538 callGreetingClientAsync enter in thread 13 and no task
+            //2020.07.17 10:11:55:539 running GreetingAsync in thread 11 and task 1
+            //2020.07.17 10:11:55:539 running Greeting in thread 11 and task 1
+            //2020.07.17 10:11:55:539 testGreetingClient got Task<String> greetingResult, and next to get greetingResult.Result in thread 13 and no task
+            //这里有个500毫秒的gap（当时Greeting方法正在blocking wait）
+            //2020.07.17 10:11:56:050 callGreetingClientAsync done in thread 11 and no task
+            //2020.07.17 10:11:56:050 testGreetingClient done - got greetingResult.Result:Hello, HanMeiMei in thread 13 and no task
             
-            TraceThreadAndTask($"{nameof(testGreetingClient)} got Task<String> greetingResult, and next to get greetingResult.Result");
+            ThirdPartyAsyncSimulator greetingClient = new ThirdPartyAsyncSimulator();
+            
+            //线程A - 调用者当前线程
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(testGreetingClient)} enter");
+            Task<String> greetingResult = callGreetingClientAsync();
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(testGreetingClient)} got Task<String> greetingResult, and next to get greetingResult.Result");
 
+            //线程A - 前面都很快，而执行这个获取task结果卡住了，因为结果还没有出来
             String greetingResultStr = greetingResult.Result;
-
             //线程A - 这里线程没变
-            TraceThreadAndTask($"{nameof(testGreetingClient)} done - got greetingResult.Result:{greetingResultStr}");
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(testGreetingClient)} done - got greetingResult.Result:{greetingResultStr}");
         }
 
         public async Task<String> callGreetingClientAsync()
@@ -92,14 +89,14 @@ namespace eval_csharp
 
             ThirdPartyAsyncSimulator greetingClient = new ThirdPartyAsyncSimulator();
             //线程A - 就是调用者所在的线程
-            TraceThreadAndTask($"{nameof(callGreetingClientAsync)} enter");
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(callGreetingClientAsync)} enter");
             Task<String> greetingResult = greetingClient.GreetingAsync("HanMeiMei");
 
             //一旦开始await，这个方法就返回了。调用方法立马得到了Task<String>的结果
             String greetingResultStr = await greetingResult;
 
             //线程B - await之后，task执行之后，处理执行结果是其他线程（不再保证是进入是的线程A）
-            TraceThreadAndTask($"{nameof(callGreetingClientAsync)} done");
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(callGreetingClientAsync)} done");
             return greetingResultStr;
         }
 
@@ -113,7 +110,7 @@ namespace eval_csharp
         //[Test]
         public void testHttpClient() {
             //线程A
-            TraceThreadAndTask("{nameof(testHttpClient)} enter");
+            ThreadEval_Util.TraceThreadAndTask("{nameof(testHttpClient)} enter");
             Task<int> lengthTask = GetPageLengthAsync("http://www.baidu.com");
 
             //在async方法运行的时候，当前task已经返回到这里了，但是如果这里获取结果的话，则继续等待直到async方法执行完毕
@@ -122,14 +119,14 @@ namespace eval_csharp
             Console.WriteLine(lengthTask.Result);
 
             //线程A - 这里线程没变
-            TraceThreadAndTask("{nameof(testHttpClient)} done");
+            ThreadEval_Util.TraceThreadAndTask("{nameof(testHttpClient)} done");
         }
 
         static async Task<int> GetPageLengthAsync(string url) {
             using (HttpClient client = new HttpClient()) {
 
                 //线程A
-                TraceThreadAndTask("{nameof(GetPageLengthAsync)} enter"); 
+                ThreadEval_Util.TraceThreadAndTask("{nameof(GetPageLengthAsync)} enter"); 
                 Task<String> fetchTextTask = client.GetStringAsync(url);
 
                 //代码执行到这里方法就返回了。这个耗时的client.GetStringAsync(url)将在
@@ -137,7 +134,7 @@ namespace eval_csharp
                 int length = (await fetchTextTask).Length;
 
                 //线程B 《=== 不再是线程A了！！！！
-                TraceThreadAndTask("{nameof(GetPageLengthAsync)} done"); 
+                ThreadEval_Util.TraceThreadAndTask("{nameof(GetPageLengthAsync)} done"); 
 
                 //注意，函数返回类型为Task<int>, 但是我们这里要返回int
                 return length;
