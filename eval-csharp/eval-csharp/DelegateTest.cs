@@ -5,18 +5,23 @@ using NUnit.Framework;
 
 namespace eval_csharp
 {
-    //这是待测试的delegation
-    internal delegate void Feedback(Int32 value);
-
     /**
      * 
      * delegate就是回调，把方法当成参数传来传去。和Java8中增加的lambda/Function类似。
      * - delegate可以作为一个普通的变量声明，譬如
-     *   - 声明一个delegate类型： delegate void Feedback(Int32 value);
-     *   - 然后可以创建一个delegate的实例：Feedback fb1 = new Feedback(FeedbackToConsole1);
+     *   - 声明一个delegate类型
+     *     - e.g. delegate void Feedback(Int32 value); 这表示一个方法的输入为Int32，输出为void
+     *   - 这个类型可以作为一个方法的输入参数
+     *     - e.g void Counter(Int32 from, Int32 to, Feedback fb)
+     *   - 然后可以创建一个delegate的实例
+     *     - e.g. Feedback fb1 = new Feedback(FeedbackToConsole1); 
+     *     - e.g. Feedback fb2 = FeedbackToConsole1
+     *     - e.g. 这有一个有意思的例子：delegate String GetString(); GetString x = 40.ToString; Console.WriteLine($"val:{x()}");
      *     - 这个实例就是通过fb1(x)来调用真正的背后函数FeedbackToConsole1这个方法
-     *   - delegate可以作为一个参数
-     *     - 如： private void Counter(Int32 from, Int32 to, Feedback fb)
+     *   
+     * - Action<T> 是没有返回值的委托， 譬如Action<Int32>
+     * - Func<T> 是类似的委托，不过返回类型，最后一个类型就是返回的类型,譬如Function<Int32, Int32, String) 表示 两个Int32为参数，String为返回值的委托
+     *
      * - 两个delegate相加，则其就形成了一个chain
      *   - 如 fbChain = fb1 + fb2
      *   - fbChain的类型与fb1和fb2一样，不过表示要调用两次
@@ -24,6 +29,7 @@ namespace eval_csharp
      *     - 多次添加则需要多次减法，去删除/恢复。
      *   - 添加两个相同的实例，则调用其两次
      *   - 下面有case去验证这些操作
+     * 
      * 
      */
     public class DelegateTest
@@ -54,12 +60,19 @@ namespace eval_csharp
         }
 
 
+        internal delegate void Feedback(Int32 value);
+
         [Test]
         public void SimpleDelegation()
         {
+
+            //声明一个delegate变量，用于后续Counter调用
             Feedback fb1 = new Feedback(FeedbackToConsole1);
+            Feedback fb2 = FeedbackToConsole1; //Counter(1, 2, FeedbackToConsole1); 这样语法也可以，更简单
+            
+            //Counter的第三个参数为一个delegate方法
             Counter(1, 2, fb1);
-            //Counter(1, 2, FeedbackToConsole1); 这样语法也可以，更简单
+            
 
             Assert.AreEqual(2, callTrace.Count);
             Assert.AreEqual("Console 1 - 1", callTrace[0]);

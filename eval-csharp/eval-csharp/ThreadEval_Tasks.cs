@@ -9,9 +9,22 @@ namespace eval_csharp
 {
 
     /**
-     * C#引入了Tasks去做更精妙的控制
-     * 因为ThreadPool.QueueUserWorkItem可以提交一次任务,但是其有一些限制，如没有内建的机制知道什么时候完成
      * 
+     * Task线程模型：
+     * - 调用者添加完task，后直接返回，并不等待Task执行完成
+     *   - 可以通过task.Wait()等待线程完成
+     *   - 可以通过await/async，使得更外部调用者直接得到task handler（并决定如何继续）
+     *     - 注意await之后的线程与之前的线程大概率不同
+     *   - 通过task.Result获取结果的话，也会等待
+     * 
+     * - 如果task的callback执行中出现了exception（包括cancel时候触发的），在获取Result时候会抛出
+     *   - 再添加task（或者task start）时候不会出现exception，因为抛出exception的地方是另一个线程（不是caller线程）
+     *   - task.Result时候可以抛出线程，是因为Result中保存了结果状态     *   
+     *   
+     * C#引入了Tasks去做更精妙的控制
+     * - 与Task相比：ThreadPool.QueueUserWorkItem可以提交一次任务,但是其有一些限制，如没有内建的机制知道什么时候完成
+     * 
+     * //TODO 如何注册这个？TaskScheduler.UnobservedTaskException();
      */
     class ThreadEval_Tasks
     {
@@ -21,17 +34,19 @@ namespace eval_csharp
             //下面3中方式是类似的
             //有些不同的是如何把变量值穿如到delegate/callback中。QueueUserWorkItem多了一个state传变量，但是好像也没啥大用处
             //#1
-            ThreadPool.QueueUserWorkItem(state => int32add_1((Int32)state), 999); //5 as argument of the callback. state=5 here
+            ThreadPool.QueueUserWorkItem(state => int32add_1((Int32)state), 999); //QueueUserWorkItem中第一个参数为callback/delegate，接受第二个参数/999作为输入
+            ThreadPool.QueueUserWorkItem(state => int32add_1(999));
             //#2
             new Task(()=>int32add_1(999)).Start();
             //#3
             Task.Run(() => int32add_1(999));
 
 
-            //下面可以认为是第4总方式，增加了泛型
+            //下面可以认为是第4种方式，增加了泛型
             //Task<Int32> 表示调用方法的范围值类型为Int32，所以int32add_1的返回类型为Int32
             //n: 传入的参数，其值就是999
             Task<Int32> t = new Task<Int32>(n => int32add_1((Int32)n), 999);
+            Task<Int32> t2 = new Task<Int32>(() => int32add_1(999));
             //启动任务
             t.Start();
 
@@ -42,8 +57,6 @@ namespace eval_csharp
             //如果task执行的时候有未处理的异常，获取Result时候会抛出System.AggregateException
             Assert.AreEqual(1000, t.Result);
 
-            //TODO 如何注册这个？
-            //TaskScheduler.UnobservedTaskException();
         }
 
         private Int32 int32add_1(Int32 n1) {
@@ -52,6 +65,45 @@ namespace eval_csharp
             return n1 + 1;
         }
 
+
+        [Test]
+        public void testTasks_quick2()
+        {
+            //下面3中方式是类似的
+            //有些不同的是如何把变量值穿如到delegate/callback中。QueueUserWorkItem多了一个state传变量，但是好像也没啥大用处
+            //#1
+            ThreadPool.QueueUserWorkItem(state=>sum_multiply(1,2,3));
+            ThreadPool.QueueUserWorkItem(state => {
+                (int a, int b, int c) = ((int a, int b, int c))state;
+                sum_multiply(a, b, c);
+                }, (1,2,3));
+            //#2
+            new Task<(Int32 mulitply, Int32 sum)>(() => sum_multiply(1, 2, 3)).Start();
+            //#3
+            Task.Run(() => sum_multiply(1, 2, 3));
+
+
+            //下面可以认为是第4种方式，增加了泛型
+            //https://stackoverflow.com/questions/18029881/how-to-pass-multiple-parameter-in-task
+            var t = new Task<(Int32 multiply, Int32 sum)>(()=>sum_multiply(1,2,3));
+            t.Start(); //启动任务
+
+            //等待任务完成,还可以有等待时间，以及一些CancellationToken（干啥的?后续可能有介绍）
+            //如果不等待，直接试图获取结果呢？ 试了一下，也是可以获取解雇哦的。
+            t.Wait();
+
+            //如果task执行的时候有未处理的异常，获取Result时候会抛出System.AggregateException
+            Assert.AreEqual((6, 6), t.Result);
+
+            //TODO 如何注册这个？
+            //TaskScheduler.UnobservedTaskException();
+        }
+        private (Int32, Int32) sum_multiply(Int32 a, Int32 b, Int32 c)
+        {
+
+            Thread.Sleep(1000); //simulate a long task
+            return (a+b+c, a*b*c);
+        }
 
         /**
          * 
@@ -69,7 +121,10 @@ namespace eval_csharp
         public void testTasks_cancel()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
-            Task<Int32> t = new Task<Int32>(n => testTasks_cancel_callback(cts.Token, (Int32)n, 2), 999);//n=999
+            //下面两种都行，t2的更简单
+            var t1 = new Task<Int32>(n => testTasks_cancel_callback(cts.Token, (Int32)n, 2), 999);//n=999
+            var t2 = new Task<Int32>(() => testTasks_cancel_callback(cts.Token, 999, 2));
+            var t  = t2;
             t.Start();
             cts.Cancel();
 
@@ -134,9 +189,20 @@ namespace eval_csharp
         [Test]
         public void testTasks_continue_cancel_fault()
         {
+            //这里证明不加任何option的话，其将继续执行
+            //不过，如果内部出现exception的话，在获取Result时候会抛出exception
             CancellationTokenSource cts = new CancellationTokenSource();
+            //调用cts.Cancel将导致内部抛出Exception（因为内部使用了token.ThrowIfCancellationRequested()）
             Task<Int32> t = new Task<Int32>(n => testTasks_cancel_callback(cts.Token, (Int32)n, 2), 999);
+            var anyT = t.ContinueWith<String>(task => "continue with any result:"); //这里故意没有加上t.Result,因为其这里调用会抛出异常
+            t.Start();
+            cts.Cancel();
+            Assert.IsTrue(anyT.Result.StartsWith("continue with any result:"));
 
+
+            //这一段证明不同的情况下的不同调用
+            cts = new CancellationTokenSource();
+            t = new Task<Int32>(n => testTasks_cancel_callback(cts.Token, (Int32)n, 2), 999);
             //成功调用这个 
             var successT = t.ContinueWith<String>(task => {
                 return "good, success with result:" + t.Result;
@@ -156,8 +222,44 @@ namespace eval_csharp
             cts.Cancel();
             //Assert.AreEqual("ok, cancelled", cancellT.Result);
             Assert.IsTrue(faultT.Result.StartsWith("bad, fault with :"));
-
         }
+
+        /**
+         * 为啥要用Task.FromResult，就是为了让代码更一致一点；有时候是为了构建测试接口
+         * https://stackoverflow.com/questions/19568280/what-is-the-use-for-task-fromresulttresult-in-c-sharp
+         * 
+         */
+        [Test]
+        public void testTaskFromResult() {
+
+            //全部都是在同步调用，只不过可以融入到async调用的moshi
+            //2020.07.17 22:11:27:820 forgedTaskFromResultAsync - before await in thread 13 and no task
+            //2020.07.17 22:11:27:822 longRunTask in thread 13 and no task
+            //2020.07.17 22:11:30:825 forgedTaskFromResultAsync - after await in thread 13 and no task
+            //2020.07.17 22:11:30:825 task got in thread 13 and no task
+            //2020.07.17 22:11:30:825 task result got in thread 13 and no task
+
+            var task = forgedTaskFromResultAsync();
+            ThreadEval_Util.TraceThreadAndTask("task got");
+
+            var result = task.Result;
+            ThreadEval_Util.TraceThreadAndTask("task result got");
+        }
+
+        //尝试过去掉async/await，结果没啥两样。加上他们是为了让代码看起来更一致
+        private async Task<String> forgedTaskFromResultAsync() {
+            ThreadEval_Util.TraceThreadAndTask("forgedTaskFromResultAsync - before await");
+            var result =  await Task.FromResult(longRunTask());
+            ThreadEval_Util.TraceThreadAndTask("forgedTaskFromResultAsync - after await");
+            return result;
+        }
+
+        private String longRunTask() {
+            ThreadEval_Util.TraceThreadAndTask("longRunTask");
+            Task.Delay(3000).Wait();
+            return "abc";
+        }
+
     }
 
 

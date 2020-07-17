@@ -32,7 +32,82 @@ namespace eval_csharp
      */
     class ASyncAwaitEval
     {
-     
+
+
+        /**
+         * 本例子来源与C#7 and .Net 2.0 - cahpter 21 /P460
+         * 我觉得对理解async/await比较有帮助，就copy到这里来
+         * note：本例子await对象为Task.Delay(200), 其没有返回结果。其他的例子中有返回结果，相互参考。
+         */
+        [Test]
+        public void testParallelForOfAsync() {
+
+            //2020.07.17 12:12:48:143 S 3 in thread 14 and task 4
+            //2020.07.17 12:12:48:143 S 1 in thread 11 and task 2
+            //2020.07.17 12:12:48:143 S 4 in thread 15 and task 5
+            //2020.07.17 12:12:48:143 S 2 in thread 6 and task 3
+            //2020.07.17 12:12:48:143 S 0 in thread 13 and task 1
+            //2020.07.17 12:12:48:144 S 6 in thread 18 and task 7
+            //2020.07.17 12:12:48:143 S 5 in thread 16 and task 6
+            //2020.07.17 12:12:48:144 S 7 in thread 17 and task 8
+            //2020.07.17 12:12:49:029 E 7 in thread 17 and task 8
+            //2020.07.17 12:12:49:029 E 5 in thread 16 and task 6
+            //2020.07.17 12:12:49:029 E 6 in thread 18 and task 7
+            //2020.07.17 12:12:49:029 E 0 in thread 13 and task 1
+            //2020.07.17 12:12:49:029 S 8 in thread 19 and task 9
+            //2020.07.17 12:12:49:029 E 4 in thread 15 and task 5
+            //2020.07.17 12:12:49:029 S 9 in thread 13 and task 1
+            //2020.07.17 12:12:49:029 E 1 in thread 11 and task 2
+            //2020.07.17 12:12:49:029 E 3 in thread 14 and task 4
+            //2020.07.17 12:12:49:029 E 2 in thread 6 and task 3
+            //2020.07.17 12:12:49:234 E 9 in thread 13 and task 1
+            //2020.07.17 12:12:49:234 E 8 in thread 19 and task 9
+            //2020.07.17 12:12:49:234 Completed - WITHOUT async/with - True in thread 13 and no task
+            //这是没有async/await的情况，用于对比
+            //可以看到S/E所使用的线程是一致是一样的；还可以看到这个Delay的时间不是很准确，我要delay200毫秒，而这里显示达到了900毫秒左右。
+            ParallelLoopResult result1 = Parallel.For(0, 10, i =>
+            {
+                ThreadEval_Util.TraceThreadAndTask($"S {i}");
+                Task.Delay(200).Wait();
+                ThreadEval_Util.TraceThreadAndTask($"E {i}");
+            });
+            ThreadEval_Util.TraceThreadAndTask($"Completed - WITHOUT async/with - {result1.IsCompleted}");
+
+            //2020.07.17 12:12:49:236 S 0 in thread 13 and task 10
+            //2020.07.17 12:12:49:236 S 6 in thread 14 and task 11
+            //2020.07.17 12:12:49:236 S 7 in thread 11 and task 12
+            //2020.07.17 12:12:49:236 S 2 in thread 19 and task 13
+            //2020.07.17 12:12:49:236 S 8 in thread 18 and task 14
+            //2020.07.17 12:12:49:236 S 1 in thread 17 and task 15
+            //2020.07.17 12:12:49:236 S 3 in thread 16 and task 16
+            //2020.07.17 12:12:49:236 S 4 in thread 15 and task 17
+            //2020.07.17 12:12:49:236 S 5 in thread 6 and task 18
+            //2020.07.17 12:12:49:238 S 9 in thread 13 and task 10
+            //2020.07.17 12:12:49:239 Completed - WITH async/with - True in thread 13 and no task
+            //2020.07.17 12:12:49:429 E 9 in thread 6 and no task
+            //2020.07.17 12:12:49:429 E 3 in thread 11 and no task
+            //2020.07.17 12:12:49:429 E 8 in thread 16 and no task
+            //2020.07.17 12:12:49:429 E 1 in thread 18 and no task
+            //2020.07.17 12:12:49:429 E 4 in thread 17 and no task
+            //2020.07.17 12:12:49:429 E 7 in thread 14 and no task
+            //2020.07.17 12:12:49:429 E 5 in thread 19 and no task
+            //2020.07.17 12:12:49:429 E 2 in thread 15 and no task
+            //2020.07.17 12:12:49:429 E 0 in thread 11 and no task
+            //2020.07.17 12:12:49:429 E 6 in thread 19 and no task
+            //1. 这里可以看到，S/E所对应的线程是不同的
+            //2. Parallel.For方法直接返回了（没有等Delay执行完成 - Completed直接打印了）
+            //   过了一会儿，await完成后其他线程把await后的结果执行一遍
+            ParallelLoopResult result2 = Parallel.For(0, 10,async i =>
+            {
+                ThreadEval_Util.TraceThreadAndTask($"S {i}");
+                await Task.Delay(200);
+                ThreadEval_Util.TraceThreadAndTask($"E {i}");
+            });
+            ThreadEval_Util.TraceThreadAndTask($"Completed - WITH async/with - {result1.IsCompleted}");
+            //下面这个Sleep是有必要的，因为使用了async之后，Parallel调用直接返回（碰到await就返回了），不等待Delay。
+            //如果不加这个Sleep，测试case就直接完成了，则后续的ThreadEval_Util.TraceThreadAndTask($"E {i}");无法打印了。
+            Thread.Sleep(250);
+        }
 
 
         //这个类中包含一个按照约定而模拟的一个GreetingAsync方法
@@ -193,7 +268,6 @@ namespace eval_csharp
             //不过，当前通过返回Task这种方式，是的外部还可以继续使用async，整盘棋就都是async了
             String[] results = await Task.WhenAll(tasks);
             return results;
-
         }
 
 

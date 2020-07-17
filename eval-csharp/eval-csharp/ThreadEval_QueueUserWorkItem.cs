@@ -7,6 +7,10 @@ namespace eval_csharp
 {
     /**
      * 
+     * ThreadPool.QueueUserWorkItem线程模型: 任务提交之后立马返回,并不等待其执行结束
+     * - 所以我在下面例子中增加了ManualResetEvent,用于外部等待内部结束的信号量
+     * - 这个线程特性与Task相同, 不过Task可以在外部通过Wait来等待完成(或者直接调用task.Result也会等待）
+     * 
      * ThreadPool.QueueUserWorkItem可以提交一次任务
      * - 可以通过token来cancel操作（不过要求内部不断检查这个token）
      * - 但是其有一些限制，如没有内建的机制知道什么时候完成
@@ -34,7 +38,7 @@ namespace eval_csharp
 
             //等待一个线程完成后，当前线程继续执行的典型用法之一，通过ManualResetEvent的Set通知等待者可以继续执行
             //微软的文档是真给力，太清楚了，见https://docs.microsoft.com/en-us/dotnet/api/system.threading.manualresetevent?view=netcore-3.1
-            ManualResetEvent mre = new ManualResetEvent(false); //false表示：not signaled
+            ManualResetEvent mre = new ManualResetEvent(false); //false表示：not signaled, 就是需要等待一个新信号才能执行的意思，就是执行WaitOne的时候会block的意思
             ThreadPool.QueueUserWorkItem(state => { //state is null, 因为这个方法中只有callback这一个参数
                 x = "123"; //注意：与java的区别，java要求这里的x必须是final的（？），而C#中可以该值，而且外边能看见
                 tmp1.x1 = "123";

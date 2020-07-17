@@ -139,5 +139,101 @@ namespace eval_csharp
             //代码参考 ThreadEval_QueueUserWorkItem::testBasicTaskExecution
 
         }
+
+        /**
+         * Mutext 可以在多个**进程**之间共享(只有有name的mutex才有这个特性）
+         * - 参考C#7.0 chapter21.13中，使用它来防止多启动重复进程的例子
+         */
+        [Test]
+        public void testMutex() {
+
+            //createdNew：表示这个mutex是不是新创建的
+            //第一个参数：false，表示是否当前线程要拥有这个mutex
+            bool createdNew;
+            var mutex = new Mutex(false, "name", out createdNew);
+
+            //TODO Q: 既然第一个参数为false，我怎么知道我是否获得了这个mutex？
+            //如果我已经获得了，我要执行mutex.ReleaseMutex()
+            //如果没有互动哦哦，就不需要执行release了
+
+        }
+
+        /**
+         * https://stackoverflow.com/questions/153877/what-is-the-difference-between-manualresetevent-and-autoresetevent-in-net
+         * ManualResetEvent 与 AutoResetEvent的区别就是使用完以后，如果要继续使用，是否需要人肉reset/还是自动reset
+         * 
+         * 注意：如果在Wait之前就发送了信号by Set（），也没关系
+         * 
+         *  Mutex在线程1中获取lock，则也必须在线程1中释放它！
+         *  Semophore则没有这个限制
+         */
+        [Test]
+        public void testResetEvent() {
+
+            //ThreadEval_QueueUserWorkItem::testBasicTaskExecution中，使用了ManualResetEvent
+
+            //注意：如果在Wait之前就发送了信号by Set（），也没关系
+            //下面就是证明这个的， WaitOne执行的时候，Set已经执行完了。WaitOne还是顺利的继续执行
+           //false：not signaled, 就是需要等待一个新信号才能执行的意思，就是执行WaitOne的时候会block的意思
+           //true：signaled, 直接WaitOne就能返回了
+           ManualResetEvent mre = new ManualResetEvent(false);
+            ThreadPool.QueueUserWorkItem(state => {
+                Thread.Sleep(5);
+                ThreadEval_Util.TraceThreadAndTask("002 before set");
+                mre.Set();
+            });
+            Thread.Sleep(1000);
+            ThreadEval_Util.TraceThreadAndTask("002 before wait");
+            mre.WaitOne(); //很可惜没有等待时间超时设置
+            ThreadEval_Util.TraceThreadAndTask("002 got signal");
+
+        }
+
+        [Test]
+        public void testCountDownEvent() {
+
+            CountdownEvent evt = new CountdownEvent(5);
+
+            //其他子线程中调用这些
+            evt.Signal();
+            evt.Signal();
+            evt.Signal();
+            evt.Signal();
+            evt.Signal();
+            
+            //当前线程中等待
+            //等待100毫秒以后，是否已经收集到所有信号了
+            //if not，应该继续等（并打印log）
+            bool got = evt.Wait(100);
+        }
+
+        /**
+         * 只是表示C#中也有这类，用于控制多个线程可以万箭齐发！
+         */
+        [Test]
+        public void testBarrier() { 
+        }
+
+        /**
+         * Semophore用来控制资源访问的最大并发数量
+         * TODO 这里的代码写的太仓促，需要重写
+         * 现在就是要示意一下api
+         */
+        [Test]
+        public void testSemophore()
+        {
+
+            //init count:1
+            //max count  : 4
+            Semaphore semophore = new Semaphore(1, 4);
+            //bool got = semophore.Wait();
+            bool got = semophore.WaitOne();
+
+            SemaphoreSlim semophoreSim = new SemaphoreSlim(1, 4);
+            bool gotSlim = semophoreSim.Wait(600);
+            //得到之后要执行release
+            semophoreSim.Release();
+
+        }
     }
 }
