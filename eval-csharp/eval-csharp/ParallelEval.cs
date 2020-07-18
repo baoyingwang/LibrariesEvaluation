@@ -10,12 +10,17 @@ using System.Threading.Tasks;
 namespace eval_csharp
 {
     /**
+     *
+     * 官方文档在这里
+     *  https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/
+     *
+     * 
      * Parallel线程模型: 其调用的所有方法执行完,parallel方法才返回
-     * - 注意与Task的区别. Task是任务添加完之后,直接返回
+     * - 注意：与Task的区别. Task是任务添加完之后,直接返回（当然Task可以通过option设定当前线程sync执行）
+     * - 注意：如果任务中如有await，则到await就返回。await后面的部分是其他线程完成。参考AsyncWait
      * 
      * ParallelLinq不在这里，而是在LinqEval_Parallel_for_Objects中
      * - 其实看官方文档就挺好了 
-     *   - https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/
      *   - 譬如 这有各种如何写Parallel的文档 https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/data-parallelism-task-parallel-library
      *   - 我现在需要做的是如何快速找到各个文档
      * 

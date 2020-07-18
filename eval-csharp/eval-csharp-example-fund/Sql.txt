@@ -1,0 +1,14 @@
+﻿create database fund_recommend;
+
+-- 关于主键/自增的声明，参考 https://www.w3schools.com/sql/sql_autoincrement.asp
+-- id用bigint应为其范围更大，但是占用更多空间（8字节），参考 https://docs.microsoft.com/en-us/sql/t-sql/data-types/int-bigint-smallint-and-tinyint-transact-sql?view=sql-server-ver15
+drop   table rank_raw_cache ;
+create table rank_raw_cache(
+id               bigint     IDENTITY(1,1) PRIMARY KEY,
+trade_date       char(8)     not null , -- YYYYMMDD
+rank_strategy_id int         not null , -- 1: last week increment percentage
+rank_source      varchar(255)not null,
+rank_raw_content varchar(max)not null,
+index idx_rank_cache_raw (trade_date, rank_strategy_id),
+UNIQUE (trade_date, rank_strategy_id, rank_source)
+);
