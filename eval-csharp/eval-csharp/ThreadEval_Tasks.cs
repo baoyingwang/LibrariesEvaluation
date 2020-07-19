@@ -54,7 +54,9 @@ namespace eval_csharp
             //如果不等待，直接试图获取结果呢？ 试了一下，也是可以获取解雇哦的。
             t.Wait();
 
-            //如果task执行的时候有未处理的异常，获取Result时候会抛出System.AggregateException
+            //Task执行中的异常不会在Caller中有体现，直到调用t.Result的时候。
+            //- 如果task执行的时候有未处理的异常，获取Result时候会抛出System.AggregateException
+            //- 也就是说，不调用t.Result（或者Continue with Fault），caller不知道发生了exception
             Assert.AreEqual(1000, t.Result);
 
         }
