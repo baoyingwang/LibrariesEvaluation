@@ -18,9 +18,11 @@ namespace eval_csharp
      *     - e.g. Feedback fb2 = FeedbackToConsole1
      *     - e.g. 这有一个有意思的例子：delegate String GetString(); GetString x = 40.ToString; Console.WriteLine($"val:{x()}");
      *     - 这个实例就是通过fb1(x)来调用真正的背后函数FeedbackToConsole1这个方法
-     *   
-     * - Action<T> 是没有返回值的委托， 譬如Action<Int32>
-     * - Func<T> 是类似的委托，不过返回类型，最后一个类型就是返回的类型,譬如Function<Int32, Int32, String) 表示 两个Int32为参数，String为返回值的委托
+     *
+     * - Action and Function
+     *   - Action<T> 是没有返回值的委托， 譬如Action<Int32>
+     *   - Func<T> 是类似的委托，不过返回类型，最后一个类型就是返回的类型,譬如Function<Int32, Int32, String) 表示 两个Int32为参数，String为返回值的委托
+     *   - refer below: Action_vs_Function_Test
      *
      * - 两个delegate相加，则其就形成了一个chain
      *   - 如 fbChain = fb1 + fb2
@@ -61,7 +63,6 @@ namespace eval_csharp
 
 
         internal delegate void Feedback(Int32 value);
-
         [Test]
         public void SimpleDelegation()
         {
@@ -77,6 +78,29 @@ namespace eval_csharp
             Assert.AreEqual(2, callTrace.Count);
             Assert.AreEqual("Console 1 - 1", callTrace[0]);
             Assert.AreEqual("Console 1 - 2", callTrace[1]);
+        }
+
+        [Test]
+        public void Action_vs_Function_Test() {
+
+            //Action是没有返回值的delegate
+            //Func是有返回值的delegate（泛型中的最后一个类型是返回值/TResult类型）
+            Action a1 = () => {
+
+            };
+
+            Action<int> a2 = (x) => {
+
+            };
+
+            Func<Int32> f1 = () => {
+                return 1;
+            };
+
+            Func<String, Int32> f2 = (x) => {
+                //x is String
+                return 1;
+            };
         }
 
         /**
