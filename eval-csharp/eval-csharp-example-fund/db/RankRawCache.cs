@@ -16,7 +16,7 @@ namespace eval_csharp_example_fund.db
      * - 我们还是以数据为中心的，这样数据库有什么升级之类的，可以直接通过sql脚本完成，以确保数据完整性
      * 
      */
-    [Table("rank_raw_cache")]
+    [Table("RankRawCache")]
     class RankRawCache
     {
         /*
@@ -33,27 +33,24 @@ namespace eval_csharp_example_fund.db
         [Required]
         [Column("trade_date")]
         [StringLength(50)]
-        public String tradeDate { get; set; }
+        public String TradeDate { get; set; }
 
         [Required]
         [Column("rank_strategy_id")]
-        public int rankStrategyId { get; set; }
+        public int RankStrategyId { get; set; }
 
         [Required]
         [StringLength(255)]
         [Column("rank_source")]
-        public String rankSource { get; set; }
+        public String RankSource { get; set; }
 
 
         //关于varchar(max) https://stackoverflow.com/questions/11235847/how-do-i-set-a-column-in-sql-server-to-varcharmax-using-asp-net-ef-codefirst-d
         //Name: "rank_raw_content" 作为Contructor参数，与 TypeName并存，这写法也没谁了！
         [Required]
-        [Column("rank_raw_content", TypeName = "varchar(MAX)")]
-        public String rankRawContent { get; set; }
+        [Column("rank_raw_content", TypeName = "nvarchar(MAX)")]
+        public String RankRawContent { get; set; }
 
-        public static implicit operator Task<object>(RankRawCache v)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

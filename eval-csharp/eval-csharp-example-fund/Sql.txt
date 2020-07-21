@@ -2,13 +2,50 @@
 
 -- 关于主键/自增的声明，参考 https://www.w3schools.com/sql/sql_autoincrement.asp
 -- id用bigint应为其范围更大，但是占用更多空间（8字节），参考 https://docs.microsoft.com/en-us/sql/t-sql/data-types/int-bigint-smallint-and-tinyint-transact-sql?view=sql-server-ver15
-drop   table rank_raw_cache ;
-create table rank_raw_cache(
-id               bigint     IDENTITY(1,1) PRIMARY KEY,
-trade_date       char(8)     not null , -- YYYYMMDD
-rank_strategy_id int         not null , -- 1: last week increment percentage
-rank_source      varchar(255)not null,
-rank_raw_content varchar(max)not null,
-index idx_rank_cache_raw (trade_date, rank_strategy_id),
-UNIQUE (trade_date, rank_strategy_id, rank_source)
+
+create table RankRawCache(
+	id                   bigint         IDENTITY(1,1) PRIMARY KEY,
+	trade_date           char(8)        not null , -- YYYYMMDD
+	rank_strategy_id     int            not null , -- 1: last week increment percentage
+	rank_source          nvarchar(255)  not null , -- 用nvarchar因为内容可能为unicode/中文
+	rank_raw_content     nvarchar(max)  not null , -- 用nvarchar因为内容为unicode/中文
+
+	create_time datetime default getdate(),
+
+	index idx_rank_cache_raw (trade_date, rank_strategy_id),
+	UNIQUE(trade_date, rank_strategy_id, rank_source)
+);
+
+create table FundInfo(
+    -- 为了与position表通过fund_id建立关联关系，fund_id只能当主键。
+	-- EF core中建议的HasAlternativeKey补救方法感觉不方便/不好用
+	-- id       bigint     IDENTITY(1,1) PRIMARY KEY,
+
+	fund_id    varchar(255) primary key,
+	fund_name nvarchar(255) not null, -- 用nvarchar因为内容为unicode/中文
+
+	-- 这些价格要及时更新
+	lastday_date    char(8),
+	lastday_price   decimal(32,3),
+
+	create_time datetime default getdate()
+	
+	-- 不添加以下字段因为其值每天都在变化，而
+	-- 我暂时没有精力去写一个定时任务每天去刷新它们（其实很好写）
+	-- lastweek_date   char(8),
+	-- lastweek_price  decimal(32,3),
+	-- lastmonth_date  char(8),
+	-- lastmonth_price decimal(32,3),
+
+	-- UNIQUE (fund_id)
+);
+
+create table Position(
+	id       bigint     IDENTITY(1,1) PRIMARY KEY,
+	fund_id  varchar(255),
+	amount   decimal(18,0),
+
+	create_time datetime default getdate(),
+
+	UNIQUE (fund_id)
 );
