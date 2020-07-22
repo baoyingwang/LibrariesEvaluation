@@ -5,9 +5,14 @@ using NUnit.Framework;
 
 /**
  * 
- *  本文原来的目标是创建测试C#InDepth 3rd chapter12的数据表和准备数据， 不过不需要了（因为下载到了其数据库）
- *  下面保留作为参考如何操作数据库连接之类的
- * 
+ * 本文原来的目标是创建测试C#InDepth 3rd chapter12的数据表和准备数据， 不过不需要了（因为下载到了其数据库）
+ * 下面保留作为参考如何操作数据库连接之类的
+ *
+ * 之所以使用sqlserver，是因为想尝试使用linq to sql designer的界面设计器，用于生成相关model类和编排主外键关系
+ *  - 经过了example-fund poc项目，感觉手工写model也可以。自动生成的总是感觉不踏实
+ *  - 不过如果有很多表和大量的字段，则手工写model则不太现实，主要是容易出错。必须借助工具，不管是linq to sql designer，还是EF core中的任何工具
+ *
+
  * Sql Server环境搭建比较简单
  * - 在我的虚拟机上面启动一个docker ：sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=abcd1234' -e 'MSSQL_PID=Express' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest-ubuntu
  * 　　- 注意：其启动需要２G以上内存，我给整个虚拟机４G，够了
@@ -15,6 +20,7 @@ using NUnit.Framework;
  * 　　- 建立了端口映射 host:1433/vm:1433 for sql server, host:3020/vm:22 for ssh baoying@localhost -p 3020
  * - 这里的数据结果，是我参考C#InDepth chapter12中用到的几个表，人肉写出来了
  *   - 数据一会儿也加进去
+ * 
  * 
  */
 namespace eval_csharp.db

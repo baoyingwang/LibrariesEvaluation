@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 /**
+ * 
+ * https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-nunit
+ * 
 * 第一个c#测试类，做了一些minor但是有趣的配置
 * 1. 使用的nunit，使用nunit是因为我参考的quickfixn用的它。
 *    note： 微软还有一个自己默认的测试框架
@@ -24,19 +27,26 @@ using NUnit.Framework;
 */
 namespace eval_csharp
 {
+    //The [TestFixture] attribute denotes a class that contains unit tests. The [Test] attribute indicates a method is a test method.
+    [TestFixture] 
     class NUnitTestEval
     {
 
         List<String> callTrace;
+
+        //每个子case执行前都执行一遍Setup
         [SetUp]
         public void SetUp()
         {
+            Console.WriteLine("setup");
             callTrace = new List<String>();
         }
 
+        //每个子case执行前都执行一遍TearDown
         [TearDown]
         public void TearDown()
         {
+            Console.WriteLine("teardown");
             callTrace.Clear();
 
         }
@@ -45,6 +55,15 @@ namespace eval_csharp
         public void test1() {
 
             Assert.AreEqual("Console 1 - 1", "Console 1 - 1");
+        }
+
+        //xunit的theory类似，可以多个input，对应多个result
+        [TestCase(2.1, ExpectedResult = 2)]
+        [TestCase(5.6, ExpectedResult = 6)]
+        [TestCase(-1.2, ExpectedResult = -1)]
+        public int testRound(double input)
+        {
+            return (int)Math.Round(input);
         }
 
         [Test]
