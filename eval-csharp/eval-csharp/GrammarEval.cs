@@ -29,6 +29,23 @@ namespace eval_csharp
             //ro_v1 = "abc"; 编译器提示错误（只能在constructor中赋值）
         }
 
+        [Test]
+        public void question_mark() {
+
+            //x = a??b  如果a不为null则x=a；如果a为null，则x=b；可以认为是x = a ?? defaultValue_if_a_is_Null
+            //等价于 x = a!=null?a:b
+            //也等价于
+            //if    a=!null: x = a
+            //else           x = b
+
+
+            String strNULL = null;
+            Assert.AreEqual("abc", strNULL ?? "abc"); //如果strNULL 是 null的话，后面的默认值
+
+            String strNotNULL = "xyz";
+            Assert.AreEqual("xyz", strNotNULL ?? "abc"); //如果strNULL 是 null的话，后面的默认值        
+        }
+
         /**
          * - 针对int类型的overflow，可以设定是否抛出overflow异常（默认不抛出），编译器能够识别一下（见下面link）
          * - 可以通过3中方式设置这种检查
@@ -105,8 +122,6 @@ namespace eval_csharp
                     $",doubleMaxDouble:{doubleMaxDouble}" +
                     $",doubleMaxPlus100:{doubleMaxPlus100}");
             });
-
-
 
         }
     }

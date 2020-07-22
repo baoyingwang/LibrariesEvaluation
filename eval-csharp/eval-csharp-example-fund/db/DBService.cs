@@ -1,18 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace eval_csharp_example_fund.db
 {
+
+    /**
+     * entity core 官方文档： https://docs.microsoft.com/en-us/ef/core/
+     * 
+     */
     class DBService
     {
 
         private String _ConnectionString;
-        public DBService(String ConnectionString) {
+        private String _dbType;
+        public DBService(String ConnectionString, String dbType) {
            this._ConnectionString = ConnectionString;
+           this._dbType = dbType;
+        }
+
+        private FundRecommandContext newContext() {
+            return new FundRecommandContext(_ConnectionString, _dbType);
         }
 
         //注意，这个相当于Task<Avoid>,就是本方法的Task里边没有返回值
@@ -20,7 +31,7 @@ namespace eval_csharp_example_fund.db
         {
             //DBContext生命周期比较短，别全局共享
             //https://stackoverflow.com/questions/7647912/why-re-initiate-the-dbcontext-when-using-the-entity-framework
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 bool created = await context.Database.EnsureCreatedAsync();
                 String creationInfo = created ? "created" : "exists";
@@ -31,7 +42,7 @@ namespace eval_csharp_example_fund.db
         public async Task AddRankRawCacheAsync(String tradeDate, Int32 rankStrategyId, String rankSource, String rankRawContent)
         {
 
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 var rankRawCache = new RankRawCache
                 {
@@ -51,7 +62,7 @@ namespace eval_csharp_example_fund.db
 
         private async Task<List<RankRawCache>> ReadAllRankRawCachesAsync()
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 List<RankRawCache> caches = await context.RankRawCaches.ToListAsync();
                 return caches;
@@ -61,7 +72,7 @@ namespace eval_csharp_example_fund.db
         public async Task<RankRawCache> QueryRankRawCacheAsync(String tradeDate, Int32 rankStrategyId, String rankSource)
         {
 
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 //列出两种不同的语法，用于对比不同
 
@@ -82,7 +93,7 @@ namespace eval_csharp_example_fund.db
 
         private async Task<List<RankRawCache>> QueryRankRawCachesAsync(String tradeDate, Int32 rankStrategyId)
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 List<RankRawCache> caches = await context.RankRawCaches
                     .Where(c => c.TradeDate == tradeDate && c.RankStrategyId == rankStrategyId)
@@ -93,7 +104,7 @@ namespace eval_csharp_example_fund.db
 
         private async Task<List<RankRawCache>> QueryRankRawCachesAsync(String tradeDate)
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 List<RankRawCache> caches = await context.RankRawCaches
                     .Where(c => c.TradeDate == tradeDate)
@@ -106,7 +117,7 @@ namespace eval_csharp_example_fund.db
         public async Task AddFundInfoAsync(String fundId, String fundName, String lastdayDate, double lastdayPrice)
         {
 
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 var fundInfo = new FundInfo
                 {
@@ -125,7 +136,7 @@ namespace eval_csharp_example_fund.db
 
         public async Task<FundInfo> QueryFundInfoAsync(String fundId)
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
 
                 //列出两种不同的语法，用于对比不同
@@ -149,7 +160,7 @@ namespace eval_csharp_example_fund.db
 
         public async Task<List<FundInfo>> QueryFundInfosAsync()
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
 
                 var fundInfoLinqQ = await (from c in context.FundInfos
@@ -162,7 +173,7 @@ namespace eval_csharp_example_fund.db
         public async Task AddPositionAsync(String fundId, Int32 amount)
         {
 
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
 
                 var fundInfo = await context.FundInfos.FirstOrDefaultAsync(s => s.FundId == fundId);
@@ -192,7 +203,7 @@ namespace eval_csharp_example_fund.db
 
         public async Task<List<Position>> QueryPositionsAsync()
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
                 List<Position> positions = await (from position in context.Positions
                                               select position).ToListAsync();
@@ -202,7 +213,7 @@ namespace eval_csharp_example_fund.db
 
         public async Task<Position> QueryPositionAsync(String fundId)
         {
-            using (var context = new FundRecommandContext(_ConnectionString))
+            using (var context = newContext())
             {
 
                 var position = await context.Positions.FirstOrDefaultAsync(s => s.FundInfo.FundId == fundId);

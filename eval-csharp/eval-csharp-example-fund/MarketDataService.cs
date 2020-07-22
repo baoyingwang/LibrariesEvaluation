@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace eval_csharp_example_fund
@@ -24,11 +26,35 @@ namespace eval_csharp_example_fund
         private static readonly HttpClient client = new HttpClient();
 
 
-        //当前基金排行 post https://www.doctorxiong.club/api/v1/fund/rank
-        //目前排名的策略是固定的，如过去一周的涨幅
-        public async Task<String> latestRankAsync()
+        internal class RankRequest
         {
+            [JsonPropertyName("fundType")]
+            public String[] fundTypes { get; set; }
 
+            [JsonPropertyName("sort")]
+            public String sortBy { get; set; }
+
+            [JsonPropertyName("fundCompany")]
+            public String[] fundCompanies { get; set; }
+            public Int32 createTimeLimit { get; set; }
+            public Int32 fundScale { get; set; }
+            public Int32 asc { get; set; }
+            public Int32 pageIndex { get; set; }
+            public Int32 pageSize { get; set; } = 10; //Property默认值
+
+        }
+
+        public async Task<String> lastWeekGrowthRankAsync() {
+
+            return await growthRankAsync("lastWeekGrowth");
+        }
+        public async Task<String> lastMonthGrowthRankAsync() {
+            return await growthRankAsync("lastMonthGrowth");
+        }
+
+        //当前基金排行 post https://www.doctorxiong.club/api/v1/fund/rank
+        public async Task<String> growthRankAsync(String sortby)
+        {
             String tradeDate = lastTradeDateWithData();
             int rankStrategyId = 1;
             String rankSource = "doctorxiong";
@@ -42,9 +68,13 @@ namespace eval_csharp_example_fund
             }
 
 
-            //TODO 增加查询指定tradeDate参数
             //https://stackoverflow.com/questions/4015324/how-to-make-an-http-post-web-request
-            var postContent = new StringContent("{}", Encoding.UTF8, "application/json");
+            RankRequest request = new RankRequest
+            {
+                sortBy = sortby
+            };
+            String postContentStr = JsonSerializer.Serialize(request);
+            var postContent = new StringContent(postContentStr, Encoding.UTF8, "application/json");
             var response = await client.PostAsync("https://api.doctorxiong.club/v1/fund/rank", postContent);
             var content = await response.Content.ReadAsStringAsync();
 

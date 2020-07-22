@@ -1,4 +1,5 @@
-﻿create database fund_recommend;
+﻿-- Sql Server --
+create database fund_recommend;
 
 -- 关于主键/自增的声明，参考 https://www.w3schools.com/sql/sql_autoincrement.asp
 -- id用bigint应为其范围更大，但是占用更多空间（8字节），参考 https://docs.microsoft.com/en-us/sql/t-sql/data-types/int-bigint-smallint-and-tinyint-transact-sql?view=sql-server-ver15

@@ -42,7 +42,7 @@ using NUnit.Framework;
  * https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/linq/
  * 
  * 
- * 如何生成data model
+ * 如何生成data model相关的类
  * - 用EF6的话，可以用界面工具（怎么做？TODO）
  * - Linq to SQL的话，可以用linq to sql designer
  *   - 官方文档 https://docs.microsoft.com/en-us/visualstudio/data-tools/linq-to-sql-tools-in-visual-studio2?view=vs-2019
@@ -61,6 +61,9 @@ using NUnit.Framework;
  * 
  * - 折腾一大圈回到原点
  *   - Ling to Sql class 只支持Sql Server， 不支持从Sqlite生成这些class之类的。
+ *   
+ *   EF provider - sqlite
+ *   https://docs.microsoft.com/en-us/ef/core/providers/sqlite/?tabs=dotnet-core-cli
  */
 namespace eval_csharp.db
 { 

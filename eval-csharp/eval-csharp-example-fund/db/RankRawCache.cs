@@ -27,7 +27,8 @@ namespace eval_csharp_example_fund.db
         rank_raw_content varchar(max),
         */
         [Key]
-        [Column("id", TypeName= "bigint")]
+        //[Column("id", TypeName= "bigint")] 
+        [Column("id")] //sqlite3不支持bigint的自增，只能是int
         public long Id { get; set; }
 
         [Required]
@@ -48,7 +49,8 @@ namespace eval_csharp_example_fund.db
         //关于varchar(max) https://stackoverflow.com/questions/11235847/how-do-i-set-a-column-in-sql-server-to-varcharmax-using-asp-net-ef-codefirst-d
         //Name: "rank_raw_content" 作为Contructor参数，与 TypeName并存，这写法也没谁了！
         [Required]
-        [Column("rank_raw_content", TypeName = "nvarchar(MAX)")]
+        //[Column("rank_raw_content", TypeName = "nvarchar(MAX)")]
+        [Column("rank_raw_content")] //sqlite不支持nvarchar(max)语法
         public String RankRawContent { get; set; }
 
 

@@ -13,6 +13,7 @@ namespace eval_csharp_example_fund.db
     {
 
         private String _ConnectionString;
+        private String _dbType = ""; //SqlServer, ot Sqlite
         public DbSet<RankRawCache> RankRawCaches { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<FundInfo> FundInfos { get; set; }
@@ -21,9 +22,10 @@ namespace eval_csharp_example_fund.db
         //可能是我这里用的EF core，而书上是EF 5？6？
         //不过不管怎样，我是搜索工程师!
         //https://stackoverflow.com/questions/38878140/how-can-i-implement-dbcontext-connection-string-in-net-core
-        public FundRecommandContext(String connectionString)//: base(GetOptions(ConnectionString))
+        public FundRecommandContext(String connectionString, String dbType)//: base(GetOptions(ConnectionString))
         {
             this._ConnectionString = connectionString;
+            this._dbType = dbType;
         }
 
         //TODO remove this method once verified
@@ -32,9 +34,20 @@ namespace eval_csharp_example_fund.db
         //    return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         //}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder
-        .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
-        .UseSqlServer(_ConnectionString);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .UseLoggerFactory(MyLoggerFactory);// Warning: Do not create a new ILoggerFactory instance each time
+
+            if ("sqlite".Equals(this._dbType.ToLower()))
+            {
+                optionsBuilder.UseSqlite(_ConnectionString);
+            }
+            else {
+                optionsBuilder.UseSqlServer(_ConnectionString);
+            }
+        }
+        
 
         //配置文件的话在这里 https://stackoverflow.com/questions/56646186/how-to-enable-logging-in-ef-core-3
         //https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging?tabs=v3

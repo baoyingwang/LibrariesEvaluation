@@ -11,7 +11,8 @@ namespace eval_csharp_example_fund.db
     class Position
     {
         [Key]
-        [Column("id", TypeName = "bigint")]
+        //[Column("id", TypeName = "bigint")]
+        [Column("id")] //sqlite 不支持bigint
         public long Id { get; set; }
 
         [Required]
