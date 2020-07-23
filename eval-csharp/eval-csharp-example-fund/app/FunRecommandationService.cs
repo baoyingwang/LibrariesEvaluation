@@ -1,17 +1,18 @@
 ﻿using eval_csharp_example_fund.db;
+using eval_csharp_example_fund.marketdataservice;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eval_csharp_example_fund
+namespace eval_csharp_example_fund.app
 {
     class FunRecommandationService
     {
         private DBService _dbService;
-        private MarketDataService _mdService;
+        private IMarketDataService _mdService;
         
-        public FunRecommandationService(DBService dbService, MarketDataService mdServic) {
+        public FunRecommandationService(DBService dbService, IMarketDataService mdServic) {
             this._dbService = dbService;
             this._mdService = mdServic;
         }

@@ -1,0 +1,23 @@
+﻿20200723 再读Bob的《敏捷软件开发：原色、模式和实践》，通过第11章DIP的进一步理解，对于本例子项目的MarketDataService模块和其他模块的依赖关系有了进一步启发。
+- 修改之前：app service 依赖于 MarketdataService
+- 修改之后：app service 依赖于自己同模块下的IMarketDataService接口（注意，这个接口与app service/FundRecommendationSerivce同模块，而与marketdataservice不同模块）
+- 修改原因：
+  - marketdata service是可能多个提供者呢，譬如和讯等
+    - 以后我们可能实现一个很强大的marketdata service，而app service不需要知道这么多细节
+    - 譬如一个composite market service，综合了多个market data来源
+    - 这样提供一个接口的好处在于隔离marketdata service的变化
+    - 这个改变===>不是<===我本次代码变更的最大收获
+  - 这个接口与app service/FundRecommendationSerivce同模块，而与marketdataservice不同模块
+    - 这个改变===>是<===我本次代码变更的最大收获
+    - 通过这个模块划分，是的模块之间的依赖彻底变成了上层模块（app service）不依赖于下层模块（marketdata service），而是下层依赖于上层（通过继承）
+    - 这与以前常见/常写的一些代码不太一样
+      - 以前我写一个模块一般就是模块中实现一个manager instance，然后全部调用这个manager完成模块之间的依赖
+      - 当然这样的manager的方式也很实用，不过其使用方式与现在这中DIP（依赖倒置原则）不太一样，使用的时候要仔细体会
+  - 现在这种DIP方式，在开始设计的时候（至少我的思路上）不太一致，不过一旦代码写出来就会感觉很清爽
+- 重要提示
+  - 为啥DBService不有样学样，改成Interface，然后app service通过interface与dbservice解除依赖？
+  - 因为
+    - DBService非常稳定，即使更换数据库也没啥影响（因为entity framework屏蔽了数据库的不同）
+  - 不过随着项目的进一步演进（虽然暂时没有这个计划），这个地方可能会有所改变
+    - 譬如可能会弄出来一个IFundRecommandPersist接口的，不过暂时不要这么做
+    - 这种变化是水到渠成的（譬如本次的marketdata service的改变），不要刻意去做

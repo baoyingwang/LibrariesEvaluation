@@ -1,4 +1,5 @@
-﻿using eval_csharp_example_fund.db;
+﻿using eval_csharp_example_fund.app;
+using eval_csharp_example_fund.db;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -7,13 +8,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace eval_csharp_example_fund
+namespace eval_csharp_example_fund.marketdataservice
 {
-    class MarketDataService
+    class DrXiongMarketDataService: IMarketDataService
     {
         private DBService _dbService;
 
-        public MarketDataService(DBService fundRecommandContext)
+        public DrXiongMarketDataService(DBService fundRecommandContext)
         {
 
             _dbService = fundRecommandContext;
@@ -53,7 +54,7 @@ namespace eval_csharp_example_fund
         }
 
         //当前基金排行 post https://www.doctorxiong.club/api/v1/fund/rank
-        public async Task<String> growthRankAsync(String sortby)
+        async Task<String> growthRankAsync(String sortby)
         {
             String tradeDate = lastTradeDateWithData();
             int rankStrategyId = 1;

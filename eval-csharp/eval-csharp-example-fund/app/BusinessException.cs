@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace eval_csharp_example_fund
+namespace eval_csharp_example_fund.app
 {
     //https://docs.microsoft.com/en-us/dotnet/standard/exceptions/how-to-create-user-defined-exceptions
     class BusinessException : Exception

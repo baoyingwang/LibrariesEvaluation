@@ -1,4 +1,5 @@
-﻿using eval_csharp_example_fund.db;
+﻿using eval_csharp_example_fund.app;
+using eval_csharp_example_fund.db;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace eval_csharp_example_fund
     class FunRecommandationServiceTest
     {
         private DBService _dbService;
-        private MarketDataService _mdService;
+        private IMarketDataService _mdService;
         
         /**
          * 当发现自己的主服务的测试无从下手时，可以清晰意识到自己之前的问题
@@ -18,7 +19,7 @@ namespace eval_csharp_example_fund
          * - 需求需要非常明确，然后再继续
          * - 相关的接口不得不定义，包括dbservice，marketdataservice等待
          */
-        public FunRecommandationServiceTest(DBService dbService, MarketDataService mdServic) {
+        public FunRecommandationServiceTest(DBService dbService, IMarketDataService mdServic) {
             this._dbService = dbService;
             this._mdService = mdServic;
         }

@@ -1,4 +1,6 @@
-﻿using eval_csharp_example_fund.db;
+﻿using eval_csharp_example_fund.app;
+using eval_csharp_example_fund.db;
+using eval_csharp_example_fund.marketdataservice;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
@@ -49,7 +51,7 @@ namespace eval_csharp_example_fund
             var ConnectionString = ConnectionStringSqlite;
             var dbType = "sqlite";
             var dbService = new DBService(ConnectionString, dbType);
-            var mdService = new MarketDataService(dbService);
+            var mdService = new DrXiongMarketDataService(dbService);
 
             var createDBTask = dbService.CreateTheDtabaseAsync();
             Task.WaitAll(createDBTask);

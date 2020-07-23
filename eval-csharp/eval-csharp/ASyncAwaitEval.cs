@@ -24,6 +24,24 @@ namespace eval_csharp
      *   - 细节来讲，await的时候会把当前UI线程释放掉。获取结果之后await之后的方法块继续执行（新线程），据说还可以在这里更新UI组件（没有尝试，值得为怀疑/探索）
      * - 还有有地方说对于IO操作有帮助
      *   - 但是暂时还没有找到合理的例子
+     *   
+     * await时候是否应该使用ConfigureAwait(false) ？
+     * - 网上文章一边倒的让使用它ConfigureAwait(false) ， 当你不要求前后线程必须相同的时候。
+     * - 其出现的背景是UI线程调用，其要求UI组件的操作必须在UI线程上面，所以希望醒来以后还是之前那个UI线程。
+     *   - 所以，在UI项目中，await之后，其默认将返回到UI线程执行，其通过一个synchronization context完成。
+     *     - 但是，即使是UI项目，可能也有些await后的调用不操作UI，也就是不需要是UI线程。这时候，就可以通过ConfigureAwait(false)，使得随便一个线程调用都行
+     *     - 注意：asp。net项目也有类似行为（但是asp。net core没有这个行为） - https://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
+     *     - WindowsForm/WPF/WindowsRT都是这样
+     *       - https://devblogs.microsoft.com/dotnet/configureawait-faq/
+     * - 但是，在.net core application项目中，默认情况下没有上面UI调用的线程模型限制，也没有相关的context
+     *   - 没有必要使用ConfigureAwait(false)
+     *   - 经过我测试，直接await醒来后，其线程id是从pool中获取的（即前后线程不同）。
+     *   - 所以说这个官方文档的说法大前提是UI组件，但是他没提
+     *     - “When an asynchronous method awaits a Task directly, continuation usually occurs in the same thread that created the task, depending on the async context. ”
+     *     - https://docs.microsoft.com/en-us/visualstudio/code-quality/ca2007?view=vs-2019
+     *   - 再但是，如果有个3rd party败家程序设定的context，而你的代码又使用的默认await（没有使用ConfigureAwait-false），则你的醒来代码还是运行在原线程上（导致性能有点不太好）
+     *     - 见：“I’ve heard ConfigureAwait(false) is no longer necessary in .NET Core. True?” https://devblogs.microsoft.com/dotnet/configureawait-faq/
+     * - 但是Fxcop代码扫描的时候，一律提示这玩意儿要改，真烦
      * 
      * 参考资料
      * - C#InDepth 3rd Chapter 15
@@ -168,7 +186,13 @@ namespace eval_csharp
             Task<String> greetingResult = greetingClient.GreetingAsync("HanMeiMei");
 
             //一旦开始await，这个方法就返回了。调用方法立马得到了Task<String>的结果
-            String greetingResultStr = await greetingResult;
+            //String greetingResultStr = await greetingResult;
+
+            //这里使用await greetingResult与 await greetingResult.ConfigureAwait(false)是一样的
+            //note：但是如果是UI程序，或者asp.net则不一样
+            //使用ConfigureAwait(false)的目的是让醒来后的线程可以是随意一个线程池中的线程
+            //见本类开头更多总结
+            String greetingResultStr = await greetingResult.ConfigureAwait(false);
 
             //线程B - await之后，task执行之后，处理执行结果是其他线程（不再保证是进入是的线程A）
             ThreadEval_Util.TraceThreadAndTask($"{nameof(callGreetingClientAsync)} done");
