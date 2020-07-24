@@ -33,6 +33,8 @@ namespace eval_csharp
      *     - 注意：asp。net项目也有类似行为（但是asp。net core没有这个行为） - https://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
      *     - WindowsForm/WPF/WindowsRT都是这样
      *       - https://devblogs.microsoft.com/dotnet/configureawait-faq/
+     *     - “The UI Thread has a SynchronizationContext by default. If there is a SynchronizationContext (i.e. we are in the UI thread) the code after an await will run in the original thread context. This is the default and expected behaviour.”
+     *       - https://medium.com/bynder-tech/c-why-you-should-use-configureawait-false-in-your-library-code-d7837dce3d7f
      * - 但是，在.net core application项目中，默认情况下没有上面UI调用的线程模型限制，也没有相关的context
      *   - 没有必要使用ConfigureAwait(false)
      *   - 经过我测试，直接await醒来后，其线程id是从pool中获取的（即前后线程不同）。

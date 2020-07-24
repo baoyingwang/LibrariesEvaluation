@@ -29,6 +29,8 @@ namespace eval_csharp
             //ro_v1 = "abc"; 编译器提示错误（只能在constructor中赋值）
         }
 
+
+        //另外还有nullableObject, e.g. int? a = null; int?b =5; 参考NullableValueTypeTest.cs
         [Test]
         public void question_mark() {
 
