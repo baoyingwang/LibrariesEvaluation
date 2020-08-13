@@ -48,6 +48,44 @@ namespace eval_csharp
         }
 
         [Test]
+        public void testSelectPartialNull()
+        {
+
+            List<String> userNames = new List<String> { "Tom", "Mary" };
+
+            //中间Select对于某些结果返回null，然后通过下一个Where过滤掉它
+            var r = userNames.Select(x =>
+            {
+                if (x == "Tom")
+                {
+                    return x;
+                }
+                else {
+                    return null;
+                }
+                
+            }).Where(s => s!= null);
+
+            Assert.AreEqual(1, r.ToArray().Length);
+            Assert.AreEqual("Mary", r.ToArray()[0]);
+        }
+
+
+        [Test]
+        public void testSelectMax()
+        {
+            //这个没啥
+            var nums = Enumerable.Range(1, 5);
+            Assert.AreEqual(5, nums.Max());
+
+
+            //这个关键是Max对于空的list操作会报错！加上.DefaultIfEmpty()则list中有一个默认值了
+            var r = nums.Where(s => s>6).DefaultIfEmpty().Max();
+            Assert.AreEqual(0, r);
+
+        }
+
+        [Test]
         public void testWhereBasic()
         {
             //where/过滤的作用

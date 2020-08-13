@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -73,6 +74,48 @@ namespace eval_csharp
             });
 
         }
+
+        [Test]
+        public void testTransitiveNull()
+        {
+            Person p = null;
+            var a = p?.hands?.Select(x => x).DefaultIfEmpty();
+            Assert.IsNull(a);
+            a?.Select(x => x);
+
+            //下面这个会出空指针错误
+            Assert.Throws<NullReferenceException>(() => {
+                //对null做foreach有空指针。这个是c#不太好的地方，java就没有这个问题。
+                //https://stackoverflow.com/questions/6455311/is-ifitems-null-superfluous-before-foreacht-item-in-items
+                //
+                //btw：linq结果做Max()的话，如果前面选择结果为空集，也出错。所以用a.Select(...).DefaultIfEmpty().Max(), 
+                //e.g. pointList.DefaultIfEmpty().Max(p => p == null ? 0 : p.X)
+                //https://stackoverflow.com/questions/5047721/linq-max-with-nulls
+                foreach (var x in a)
+                {
+
+                }
+            });
+
+
+            Person p2 = new Person();
+            p2.hands = null;
+            a = p2?.hands?.Select(x => x).DefaultIfEmpty();
+            Assert.IsNull(a);
+
+        
+        }
+
+        class Person {
+
+            public IEnumerable<Hand> hands;
+        }
+
+        class Hand { 
+        
+        }
+
+        
 
     }
 }

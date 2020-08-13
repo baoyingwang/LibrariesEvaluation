@@ -16,7 +16,7 @@ namespace eval_csharp
          * 在微软的官方文档其实已经非常清楚了，见https://docs.microsoft.com/en-us/dotnet/csharp/iterators
          * 这里只是简要的说一下有这样的语法
          * 1. iterator 通过foreach 访问
-         * 2. 可以同yield return生成结果
+         * 2. 可以通过yield return生成结果
          * 
          * 注意：如文中（online）所讲，如果对应类型是Disposable，其翻译后的代码将在final中执行Dispose
          * 
@@ -25,6 +25,9 @@ namespace eval_csharp
         public void testGetSingleDigitNumbers() {
             GetSingleDigitNumbers();
         }
+
+        //下面方法的用以是返回一个列表，值为：0,1,2,3,4,5,6,7,8,9,50,100, 101, 102, 103, 104, 105, 106, 107, 108, 109 
+        //这个列表的用意是说，其返回值是动态的。你可以添加更多逻辑，使得在不同的情况下返回不同的list值
         public IEnumerable<int> GetSingleDigitNumbers()
         {
             //copy directly from https://docs.microsoft.com/en-us/dotnet/csharp/iterators

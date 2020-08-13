@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace eval_csharp
@@ -87,6 +89,33 @@ namespace eval_csharp
             Assert.AreEqual('\\', verbatim[3]);
             Assert.AreEqual('n',verbatim[4]);
 
+        }
+
+        [Test]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
+        public void testPattern()
+        {
+            Assert.AreEqual(9, this.Parse("AzSet1;IDF9"));
+            Assert.AreEqual(9, this.Parse("IDF9"));
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
+        private int Parse(string tag)
+        {
+            var tagTokens = tag.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).Select(token => token.Trim());
+
+            Regex IdfRegex = new Regex(@"IDF(\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var colo = 0;
+            foreach (var tagItem in tagTokens)
+            {
+                var idfMatch = IdfRegex.Match(tagItem);
+
+                if (idfMatch.Success)
+                {
+                    colo = int.Parse(idfMatch.Groups[1].Value);
+                }
+            }
+            return colo;
         }
     }
 }
