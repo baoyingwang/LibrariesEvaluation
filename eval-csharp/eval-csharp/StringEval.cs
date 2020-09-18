@@ -117,5 +117,27 @@ namespace eval_csharp
             }
             return colo;
         }
+
+        [Test]
+        public void testPattern02()
+        {
+            var regex = new Regex("oob01.*stb", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Assert.IsTrue(regex.IsMatch("oob01.stb"));
+
+
+            regex = new Regex("-..M3$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Assert.IsFalse(regex.IsMatch("abcd1234M3"));
+            Assert.IsTrue(regex.IsMatch("-12M3"));
+            Assert.IsTrue(regex.IsMatch("102-12M3"));
+
+            regex = new Regex(".*M3$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Assert.IsTrue(regex.IsMatch("abcd1234M3"));
+
+            Assert.IsTrue(Regex.IsMatch("STO-0100-0001-02M3", "STO-0100-0001-02M3", RegexOptions.IgnoreCase));
+            Assert.IsTrue(Regex.IsMatch("STO-0100-0001-02M3", "STO-0100-000[1,2]-02M3", RegexOptions.IgnoreCase));
+
+
+
+        }
     }
 }
