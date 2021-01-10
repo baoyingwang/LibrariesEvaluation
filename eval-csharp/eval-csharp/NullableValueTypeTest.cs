@@ -73,6 +73,29 @@ namespace eval_csharp
                 var x = hasMore.Value;
             });
 
+            //https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/member-access-operators#null-conditional-operators--and-
+            //
+            var a = new A();
+            bool? aR = a?.f1?.Contains("x", StringComparison.OrdinalIgnoreCase);
+            //不支持 if(bool?) 下面这样的判断
+            //if (aR)
+            //{ 
+            //
+            //}
+            if (aR.HasValue && aR.Value) //不得不先判断HasValue, 否则直接拆箱在aR为null时候会有异常（见上面的test case)
+            { 
+            }
+
+            A b = null;
+            bool? bR = b?.f1?.Contains("x", StringComparison.OrdinalIgnoreCase); //后面的Contains不会执行，因为short curcuiting
+            if (bR.HasValue && bR.Value) //不得不先判断HasValue, 否则直接拆箱在bR为null时候会有异常（见上面的test case)
+            {
+            }
+        }
+
+        class A
+        {
+            public string f1 { get; set; }
         }
 
         [Test]
