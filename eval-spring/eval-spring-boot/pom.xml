@@ -14,7 +14,7 @@
 
 
   <properties>
-    <spring.version>2.2.2.RELEASE</spring.version>
+    <spring.version>2.5.12</spring.version>
     <docker.image.name>baoying/eval-spring-boot</docker.image.name>
     <docker.image.tag>quickstart</docker.image.tag>
   </properties>
