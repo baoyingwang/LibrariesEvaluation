@@ -28,6 +28,7 @@ note: 之所以用万字长文，是为了紧凑的内容在一起，进而希�
 note: try put '1' on all prompt
     ERROR in common_suffix validator: All prompts are identical: `1`
     Consider leaving the prompts blank if you want to do open-ended generation, otherwise ensure prompts are different
+note: raised an issue to https://github.com/MicrosoftDocs/azure-docs/issues/107548
 
 数据2：万字长文（中文），所有模型(ada, babbage, curie)build都失败 - "Fine tune failed during training"
 prompt,completion
