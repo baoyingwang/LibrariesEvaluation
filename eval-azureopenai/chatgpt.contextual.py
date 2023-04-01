@@ -36,6 +36,7 @@ def chatbotAz002():
     print(response)
     print(response['choices'][0]['message']['content'])
 
+# TODO - control the token size. It overflows now for long talks
 def chatbotAz003_whileTrue():
     messages = [
     {"role": "system", "content": "What can you do as an AI."},

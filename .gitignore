@@ -1,6 +1,7 @@
 /bin
 /**/log
 /**/logarchive
+/**/__pycache__
 /build
 /ide_bin
 /.gradle
