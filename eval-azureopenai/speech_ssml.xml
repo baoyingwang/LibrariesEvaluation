@@ -1,0 +1,15 @@
+<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+    <!-- https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice -->
+
+  <voice name="en-US-JennyNeural">
+    <prosody rate="slow"></prosody>
+    The Speech service provides speech-to-text and text-to-speech capabilities with an Azure Speech resource
+  </voice>
+
+<!-- the duration does not work. output file is 0byte for some reason. 
+  <voice name="en-US-JennyNeural">
+    <mstts:audioduration value="120s"/>
+    The Speech service provides speech-to-text and text-to-speech capabilities with an Azure Speech resource
+  </voice>
+  -->
+</speak>
