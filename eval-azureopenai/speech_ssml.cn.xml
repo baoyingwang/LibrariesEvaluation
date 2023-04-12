@@ -1,0 +1,6 @@
+<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="string">
+    <!-- https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice -->
+
+  <voice name="zh-CN-XiaochenNeural">
+    <prosody rate="fast"></prosody>hellow, xml content 中文</voice>
+</speak>
