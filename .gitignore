@@ -26,3 +26,8 @@
 /**/packages
 
 /**/*ignore
+
+**/*interp
+**/*tokens
+**/.antlr
+**/output
