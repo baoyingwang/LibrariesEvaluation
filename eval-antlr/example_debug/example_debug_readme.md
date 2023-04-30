@@ -1,9 +1,19 @@
 # How To
-0. npm install antlr4ts (TODO double confirm whether this is mandatory)
-  - https://github.com/mike-lischke/vscode-antlr4/blob/HEAD/doc/parser-generation.md
-1. copy the launch_example.json to .vscode/launch.json
-2. change the g4 file, input txt, start rule etc accordingly
-3. open the Run and Debug, you will find this example debug profile.
+# Option1 - use intellij (community version can work) - preferred
+- install G4 plugin as indicated by intellij
+- click 'ANTLR Preview'(from the bottom) to show the related windows out, and start debug by text input for file input
+  - it will also show the Parse tree, or show the Hierarchy, profiler etc
+- refer
+  - https://stackoverflow.com/questions/69081085/how-can-we-test-antlr-lexer-rules-using-intellij-antlr-v4-plugin
+  - refer https://www.youtube.com/watch?v=0A2-BquvxMU ANTLR4 Intellij Plugin -- Parser Preview, Parse Tree, and Profiling
+
+
+# option 2 - use the VS Code
+1. npm install antlr4ts (TODO double confirm whether this is mandatory)
+- https://github.com/mike-lischke/vscode-antlr4/blob/HEAD/doc/parser-generation.md
+2copy the launch_example.json to .vscode/launch.json
+3change the g4 file, input txt, start rule etc accordingly
+4.open the Run and Debug, you will find this example debug profile.
 
 output
 1. the DEBUG CONSOLE windows, you can find below tokens list, and parse tree(text)
@@ -46,6 +56,8 @@ prog (
 
 
 ```
+
+
 # Note 
 the  Expr.g4 file is from https://github.com/antlr/antlr4/blob/master/doc/getting-started.md
 

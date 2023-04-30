@@ -8,6 +8,7 @@
 /.idea
 /classes
 /fileStore
+/gen
 /out
 /target
 /.DS_Store
