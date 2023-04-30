@@ -7,3 +7,4 @@ expr:	expr ('*'|'/') expr
     ;
 NEWLINE : [\r\n]+ -> skip;
 INT     : [0-9]+ ;
+WS   : [ \t]+ -> skip ;
