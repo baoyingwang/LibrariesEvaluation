@@ -4,12 +4,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug ANTLR4 grammar - example 001",
+            "name": "example: debug",
             "type": "antlr-debug",
             "request": "launch",
             "input": "example_debug/input.txt",
             "grammar": "example_debug/Expr.g4",
             "startRule": "prog",
+            "printParseTree": true,
+            "visualParseTree": true
+        },
+        {
+            "name": "example: global var debug - java action",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "example_debug_java.action/input.txt",
+            "grammar": "example_debug_java.action/ex_global_var_combined.g4",
+            "startRule": "entry",
             "printParseTree": true,
             "visualParseTree": true
         }

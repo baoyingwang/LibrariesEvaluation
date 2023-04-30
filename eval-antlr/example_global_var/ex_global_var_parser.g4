@@ -7,5 +7,5 @@ options {
 }
 
 entry :
-  ACCESS_LIST
+  ACCESS_LIST DEC STANDARD DEC
 ;

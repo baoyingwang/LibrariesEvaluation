@@ -1,4 +1,6 @@
 # How To
+0. npm install antlr4ts (TODO double confirm whether this is mandatory)
+  - https://github.com/mike-lischke/vscode-antlr4/blob/HEAD/doc/parser-generation.md
 1. copy the launch_example.json to .vscode/launch.json
 2. change the g4 file, input txt, start rule etc accordingly
 3. open the Run and Debug, you will find this example debug profile.
