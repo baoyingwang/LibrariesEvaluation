@@ -1,0 +1,51 @@
+# Introduction
+Antlr4 is based on java. We can use the related lib directly with jdk
+
+# how to setup
+I setup below alias
+```
+  antlr4_complete_jar="C:\Users\baoywang\.vscode\extensions\mike-lischke.vscode-antlr4-2.3.1\antlr\antlr-4.9.2-complete.jar"
+#use antlar4j rather than anlt4, because it is already installed here /c/Users/baoywang/AppData/Local/Programs/Python/Python311/Scripts/antlr4
+alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.Tool"
+alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.gui.TestRig"
+```
+
+# how to use 
+
+## generate token/tree/GUI
+```
+$ grun
+java org.antlr.v4.gui.TestRig GrammarName startRuleName
+  [-tokens] [-tree] [-gui] [-ps file.ps] [-encoding encodingname]
+  [-trace] [-diagnostics] [-SLL]
+  [input-filename(s)]
+Use startRuleName='tokens' if GrammarName is a lexer grammar.
+Omitting input-filename makes rig read from stdin.
+```
+
+# compile the g4 to target language for later program
+```
+$ antlr4j
+ANTLR Parser Generator  Version 4.9.2
+ -o ___              specify output directory where all output is generated
+ -lib ___            specify location of grammars, tokens files
+ -atn                generate rule augmented transition network diagrams
+ -encoding ___       specify grammar file encoding; e.g., euc-jp
+ -message-format ___ specify output style for messages in antlr, gnu, vs2005
+ -long-messages      show exception details when available for errors and warnings
+ -listener           generate parse tree listener (default)
+ -no-listener        don't generate parse tree listener
+ -visitor            generate parse tree visitor
+ -no-visitor         don't generate parse tree visitor (default)
+ -package ___        specify a package/namespace for the generated code
+ -depend             generate file dependencies
+ -D<option>=value    set/override a grammar-level option
+ -Werror             treat warnings as errors
+ -XdbgST             launch StringTemplate visualizer on generated code
+ -XdbgSTWait         wait for STViz to close before continuing
+ -Xforce-atn         use the ATN simulator for all predictions
+ -Xlog               dump lots of logging info to antlr-timestamp.log
+ -Xexact-output-dir  all output goes into -o dir regardless of paths/package
+
+antlr4j "ExJavaActionParser.g4" -o "${outputDirName}"
+```

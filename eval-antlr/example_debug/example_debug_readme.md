@@ -1,5 +1,6 @@
 # How To
 # Option1 - use intellij (community version can work) - preferred
+- limitation: don't support {action} on target language
 - install G4 plugin as indicated by intellij
 - click 'ANTLR Preview'(from the bottom) to show the related windows out, and start debug by text input for file input
   - it will also show the Parse tree, or show the Hierarchy, profiler etc
@@ -8,17 +9,21 @@
   - refer https://www.youtube.com/watch?v=0A2-BquvxMU ANTLR4 Intellij Plugin -- Parser Preview, Parse Tree, and Profiling
 
 
-# option 2 - use the VS Code
-1. npm install antlr4ts (TODO double confirm whether this is mandatory)
-- https://github.com/mike-lischke/vscode-antlr4/blob/HEAD/doc/parser-generation.md
-2copy the launch_example.json to .vscode/launch.json
-3change the g4 file, input txt, start rule etc accordingly
-4.open the Run and Debug, you will find this example debug profile.
+# option 2 - use the VS code antlr plugin - ANTLR4 grammar syntax support
+- limitation: don't support {action} on target language
+- refer
+  - plugin home page: https://github.com/mike-lischke/vscode-antlr4
+  - plugin debug: https://github.com/mike-lischke/vscode-antlr4/blob/master/doc/grammar-debugging.md
+
+- how to setup
+1. copy the launch_example.json to .vscode/launch.json
+1. change the g4 file, input txt, start rule etc accordingly
+1. open the Run and Debug, you will find this example debug profile.
 
 output
 1. the DEBUG CONSOLE windows, you can find below tokens list, and parse tree(text)
-2. a new parse tree GUI window
-3. debug breakpoints can be setup
+1. a new parse tree GUI window
+1. debug breakpoints can be setup
 ```
 Tokens:
 [@0,0:1='10',<8>,1:0]
