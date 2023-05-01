@@ -1,51 +1,24 @@
 # Introduction
-- this is an example of java action
+This is an example of java action
 
 # how to
+Use antlr4j/grun since there has action (java action here) which control the lexer output
+- see the ExJavaAction.sh for the usage
 
-prefer: 
-1. intellij(to be figured out how to debug) or vscode if no action
-2. antlr4j/grun if there is lang action
-3. dont use 'antlr4-parse' which has limitation. It is just a wrapper on antlar4j/grun jar files
+Why not intellij/vscode/python antlr tool?
+- intellij or vscode do not support runtime action(not figure out yet for now at least)
+- dont use the pyathon 'antlr4-parse' which only support lexer or combined
 
-- option1 - VS code
-- option2 - intellij
-- option3 - use cmd
-  - antlr4-parse ex_global_var_combined.g4 entry -tree
-  - OR antlr4-parse ex_global_var_combined.g4 entry -gui
-```
-FAREAST+baoywang@baoywang-homepc MINGW64 ~/OneDrive - Microsoft/ws/github/LibrariesEvaluation/eval-antlr/example_debug_java.action (master) 20:04 30/04/2023
-$ antlr4-parse ex_global_var_combined.g4 entry -tree                                                                                                                        
-access-list 51 standard 12345
-^Z
-line 1:24 mismatched input '12345' expecting DEC
-(entry:1 access-list 51 standard 12345)
-```
-- option4 - antlr4j, grun - this better because the exceptions can be printed on the console. The VS code and intellij surpressed them for some reason.
-```
-$ tail -5 ~/.bashrc
-# https://blog.knoldus.com/testing-grammar-using-antlr4-testrig-grun/
-antlr4_complete_jar="C:\Users\baoywang\.vscode\extensions\mike-lischke.vscode-antlr4-2.3.1\antlr\antlr-4.9.2-complete.jar"
-#use antlar4j rather than anlt4, because it is already installed here /c/Users/baoywang/AppData/Local/Programs/Python/Python311/Scripts/antlr4
-alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar}\" org.antlr.v4.Tool"
-alias grun="java -cp \"${antlr4_complete_jar}:.\" org.antlr.v4.gui.TestRig"
-
-FAREAST+baoywang@baoywang-homepc MINGW64 ~/OneDrive - Microsoft/ws/github/LibrariesEvaluation/eval-antlr/example_debug_java.action/output (master) 21:28 30/04/2023
-$ java -cp "${antlr4_complete_jar};." org.antlr.v4.runtime.misc.TestRig ex_global_var_parser entry -tree
-Warning: TestRig moved to org.antlr.v4.gui.TestRig; calling automatically
-Can't load ex_global_var_parser as lexer or parser
-```
-generate and comptile
-```
-antlr4j ex_global_varLexer.g4 -o output
-antlr4j ex_global_varParser.g4 -o output
-
-cd output
-javac -cp "${antlr4_complete_jar}" *java
-
-grun ex_global_var entry -tree 
-#OR java -cp "${antlr4_complete_jar};." org.antlr.v4.gui.TestRig ex_global_var_parser entry -tree
-```
+# take away
+- for java action, it has its own methods to get related values
+  - the paring token string: this.getText(). Note: python is self.text
+  - reset the type by this._type = token value. Note: python is self.type = token value
+  - note: see the ACL_NUM in ExJavaActionLexer.g4
+- the full steps to compile, and run with antlr4 and grun
+  - use antlr4 to complie the g4 into java firstly. java -Xmx500M -cp "${antlr4_complete_jar};." org.antlr.v4.Tool "ExJavaActionLexer.g4"  -o "$ ;{outputDirName}"; java -Xmx500M -cp "${antlr4_complete_jar};." org.antlr.v4.Tool "ExJavaActionParser.g4" -o "${outputDirName}"
+  - compile the generated java files. javac -cp "${antlr4_complete_jar}" "${outputDirName}/*java"
+  - generate tree and tokens again input. java -cp "${antlr4_complete_jar};.;./.antlr" org.antlr.v4.gui.TestRig ExJavaAction entry -tree "input.txt"; java -cp "${antlr4_complete_jar};.;./.antlr" org.antlr.v4.gui.TestRig ExJavaAction entry -tokens "input.txt"
+  - note: see ExJavaAction.sh
 
 # Trouble Shooting
 ## Exception in thread "main" java.lang.ClassCastException: class ex_global_var_parser

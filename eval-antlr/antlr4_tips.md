@@ -1,3 +1,17 @@
+# in combined g4, use lexer::, paser:: to tell the member location
+@lexer::members {
+boolean enableDEC = true;
+boolean enableACL_NUM = false;
+}
+
+# setup antlr4 and grun alias
+- refer https://blog.knoldus.com/testing-grammar-using-antlr4-testrig-grun/
+$ tail -5 ~/.bashrc 
+antlr4_complete_jar="C:\Users\baoywang\.vscode\extensions\mike-lischke.vscode-antlr4-2.3.1\antlr\antlr-4.9.2-complete.jar"
+#use antlar4j rather than anlt4, because it is already installed here /c/Users/baoywang/AppData/Local/Programs/Python/Python311/Scripts/antlr4
+alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.Tool"
+alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.gui.TestRig"
+
 # parse and get the parse tree by antlr4-parse
 - GUI: 
   - antlr4-parse Expr.g4 prog -gui

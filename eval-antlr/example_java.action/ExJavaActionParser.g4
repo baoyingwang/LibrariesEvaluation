@@ -1,7 +1,7 @@
-parser grammar ex_global_varParser;
+parser grammar ExJavaActionParser;
 
 options {
-  tokenVocab = ex_global_varLexer;
+  tokenVocab = ExJavaActionLexer;
 }
 
 entry :
