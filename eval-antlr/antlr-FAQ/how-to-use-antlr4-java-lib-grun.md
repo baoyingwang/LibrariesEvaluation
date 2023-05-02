@@ -4,7 +4,8 @@ Antlr4 is based on java. We can use the related lib directly with jdk
 # how to setup
 I setup below alias
 ```
-  antlr4_complete_jar="C:\Users\baoywang\.vscode\extensions\mike-lischke.vscode-antlr4-2.3.1\antlr\antlr-4.9.2-complete.jar"
+# https://blog.knoldus.com/testing-grammar-using-antlr4-testrig-grun/
+antlr4_complete_jar="C:\Users\baoywang\OneDrive - Microsoft\ws\env\antlr\antlr-4.12.0-complete.jar"
 #use antlar4j rather than anlt4, because it is already installed here /c/Users/baoywang/AppData/Local/Programs/Python/Python311/Scripts/antlr4
 alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.Tool"
 alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.gui.TestRig"
@@ -21,9 +22,14 @@ java org.antlr.v4.gui.TestRig GrammarName startRuleName
   [input-filename(s)]
 Use startRuleName='tokens' if GrammarName is a lexer grammar.
 Omitting input-filename makes rig read from stdin.
+
+e.g. grun ExJavaAction entry -tokens "input.txt"
 ```
 
 # compile the g4 to target language for later program
+- specify the target language(default Java): -Dlanguage=Python3  
+  - refer: https://stackoverflow.com/questions/73070369/how-do-i-install-antlr4-for-python3-on-windows
+
 ```
 $ antlr4j
 ANTLR Parser Generator  Version 4.9.2
@@ -47,5 +53,12 @@ ANTLR Parser Generator  Version 4.9.2
  -Xlog               dump lots of logging info to antlr-timestamp.log
  -Xexact-output-dir  all output goes into -o dir regardless of paths/package
 
-antlr4j "ExJavaActionParser.g4" -o "${outputDirName}"
+e.g. default target as Java
+cd example_java.action
+antlr4j "ExJavaActionLexer.g4"  -o "output"
+antlr4j "ExJavaActionParser.g4" -o "output"
+
+e.g. 
+cd example_global_var
+antlr4j "ExGlobalVarLexer.g4"  -o "output" -Dlanguage=Python3 
 ```

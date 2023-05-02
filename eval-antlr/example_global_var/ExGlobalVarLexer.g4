@@ -1,4 +1,4 @@
-lexer grammar ex_global_var_lexer;
+lexer grammar ExGlobalVarLexer;
 
 @members {
 enableDEC = True
