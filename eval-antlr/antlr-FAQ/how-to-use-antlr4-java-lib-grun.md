@@ -7,8 +7,8 @@ I setup below alias
 # https://blog.knoldus.com/testing-grammar-using-antlr4-testrig-grun/
 antlr4_complete_jar="C:\Users\baoywang\OneDrive - Microsoft\ws\env\antlr\antlr-4.12.0-complete.jar"
 #use antlar4j rather than anlt4, because it is already installed here /c/Users/baoywang/AppData/Local/Programs/Python/Python311/Scripts/antlr4
-alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.Tool"
-alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr\" org.antlr.v4.gui.TestRig"
+alias antlr4j="java -Xmx500M -cp \"${antlr4_complete_jar};.;./.antlr;./output\" org.antlr.v4.Tool"
+alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr;./output\" org.antlr.v4.gui.TestRig"
 ```
 
 # how to use 

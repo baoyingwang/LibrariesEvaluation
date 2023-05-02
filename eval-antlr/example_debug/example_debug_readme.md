@@ -7,13 +7,15 @@
 - refer
   - https://stackoverflow.com/questions/69081085/how-can-we-test-antlr-lexer-rules-using-intellij-antlr-v4-plugin
   - refer https://www.youtube.com/watch?v=0A2-BquvxMU ANTLR4 Intellij Plugin -- Parser Preview, Parse Tree, and Profiling
-
+- ![Intellij-screenshot](https://github.com/baoyingwang/LibrariesEvaluation/tree/master/eval-antlr/example_debug/antlr-ide-intellij.png?raw=true)
 
 # option 2 - use the VS code antlr plugin - ANTLR4 grammar syntax support
 - limitation: don't support {action} on target language
 - refer
   - plugin home page: https://github.com/mike-lischke/vscode-antlr4
   - plugin debug: https://github.com/mike-lischke/vscode-antlr4/blob/master/doc/grammar-debugging.md
+- ![VSCode-screenshot](https://github.com/baoyingwang/LibrariesEvaluation/tree/master/eval-antlr/example_debug/antlr-ide-vscode.png?raw=true)
+
 
 - how to setup
 1. copy the launch_example.json to .vscode/launch.json

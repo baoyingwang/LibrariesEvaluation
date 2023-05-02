@@ -14,11 +14,11 @@
             "visualParseTree": true
         },
         {
-            "name": "example: global var debug - java action",
+            "name": "example: java action with debug profile",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "example_debug_java.action/input.txt",
-            "grammar": "example_debug_java.action/ex_global_var_combined.g4",
+            "input": "example_java.action/input.txt",
+            "grammar": "example_java.action/ExJavaActionParser.g4",
             "startRule": "entry",
             "printParseTree": true,
             "visualParseTree": true
