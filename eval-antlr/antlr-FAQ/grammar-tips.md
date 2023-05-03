@@ -77,7 +77,24 @@ ACL_NUM
 ```
 
 # mode - refer "Island Grammars: Dealing with Different Formats in the Same File" - chapter 4 "the definitive antlr4" 2nd
-- the example of tour/XMLLexer.g4
+- refer: chapter 12 https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/f_0076.xhtml
+  - below examples are good, and pls read the g4 file, and the related pages in book
+  - example [chapter 4 tour/XMLLexer.g4 - github](https://github.com/jszheng/py3antlr4book/blob/master/04-modechange/XMLLexer.g4)
+  - example [chapter 12 lexmagic/ModeTagsLexer.g4- github](https://github.com/jszheng/py3antlr4book/blob/master/12-sea_of_text/ModeTagsLexer.g4) - switch by mode(M)
+  - example [lexmagic/XMLLexer.g4- media.pragprog.com](http://media.pragprog.com/titles/tpantlr2/code/lexmagic/XMLLexer.g4) - switch by popMode(M)
+    - "Unlike the ModeTagsLexer grammar that used just the mode command, we’re using pushMode (and popMode in a moment). By pushing the mode, the lexer can pop the mode to return to the “invoking” mode. This is useful for nested mode switches, though we’re not doing that here."
+
+- TODO: Which one to be used - mode(M), or pushMode(M) to enter a mode? mode(M), popMode to leave current mode?
+- Lexer are split into multi sections based on mode. All are in default mode, if no any additional mode is defined
+- A stack is used to tell the mode usage
+    - Top of stack - current mode
+    - Use pushMode(M), mode(M) to switch to another mode
+        - pushMode(M)
+          - This is the same as mode except that it pushes the current mode onto a stack as well as setting the mode M. It should be used in conjunction with popMode.From <https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/f_0098.xhtml> 
+        - mode(M) : Switching modes with mode changes the current stack top. 
+          - After matching this token, switch the lexer to mode M. The next time the lexer tries to match a token, it will look only at rules in mode M. M can be a mode name from the same grammar or an integer literal. See grammar Strings earlier. From <https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/f_0098.xhtml> 
+
+
 # "Rewriting the Input Stream" - chapter 4 "the definitive antlr4" 2nd
 - tour/InsertSerialIDListener.java
 - "TokenStreamRewriter is a powerful and extremely efficient means of manipulating a token stream."
@@ -134,3 +151,12 @@ You can modify this example to perform any custom processing you need on the hid
 
 From <https://chat.openai.com/c/3d601309-43f9-4ee6-98cf-4cd452602811> 
 ```
+
+# some tips
+From <https://www.cnblogs.com/rainforwind/articles/15399735.html> 
+- more, mode, 属性, returns，type，channel 等语法参考官方文档，因为文档写的比较绕，所以补充几句。
+	-  more 用在词法定义中，代表本条规则不规约，将其匹配到的内容合并到后续执行中第一个非more且非skip的规则结果中。
+	- mode、pushMode、PopMode 用在词法定义中，代表模式切换（缺省为DEFAULT_MODE）
+	-  语法规则的头部（冒号之前的部分）不止可以有规则名称，还可以声明属性、返回值(returns)、局部变量(locals)，属性和返回值可以在其他规则引用该规则是使用。
+	-  词法分析中，type可以声明实际规约到哪个token，在一个token有多种case的情况下，就不需要用或的关系来一次性写全，而是可以随时补充。
+	-  channel，将分析结果发送到其他通道，可以处理注释等内容。

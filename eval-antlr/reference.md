@@ -1,0 +1,6 @@
+- offical documents https://github.com/antlr/antlr4/tree/master/doc
+    - e.g. [actions](https://github.com/antlr/antlr4/blob/master/doc/actions.md), [Semantic Predictes](https://github.com/antlr/antlr4/blob/master/doc/predicates.md), etc.
+- [The Definitive ANTLR4 Reference, 2nd Edition](https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/)
+  - code https://www.pragprog.com/titles/tpantlr2/the-definitive-antlr-4-reference/
+    - g4 + java
+  - python version example: https://github.com/jszheng/py3antlr4book

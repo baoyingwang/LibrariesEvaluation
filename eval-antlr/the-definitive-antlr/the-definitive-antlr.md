@@ -1,3 +1,85 @@
 # Introduction
 - this is a practice for book <<The Definitive Antlr4 Reference>> 2nd edition
 - this also heavily referred the https://github.com/jszheng/py3antlr4book/, which completes the related practices with Python3 
+# code
+  - code https://www.pragprog.com/titles/tpantlr2/the-definitive-antlr-4-reference/
+    - g4 + java
+  - python version example: https://github.com/jszheng/py3antlr4book
+# content
+(copied from https://pragprog.com/titles/tpantlr2/the-definitive-antlr-4-reference/)
+- Introducing ANTLR and Computer Languages
+    - Meet ANTLR
+        - Installing ANTLR
+        - Executing ANTLR and Testing Recognizers
+    - The Big Picture
+        - Let’s Get Meta! excerpt
+        - Implementing Parsers
+        - You Can’t Put Too Much Water into a Nuclear Reactor
+        - Building Language Applications Using Parse Trees
+        - Parse Tree Listeners and Visitors
+        - A Starter ANTLR Project
+    - A Quick Tour
+        - Matching an Expression Language
+        - Building a Calculator Using a Visitor
+        - Building a Translator with a Listener excerpt
+        - Making Things Happen During the Parse
+        - Cool Lexical Features
+- Developing Language Applications With ANTLR Grammars
+    - Designing Grammars
+        - Deriving Grammars from Language Samples
+        - Using Existing Grammars as a Guide
+        - Recognizing Common Language Patterns with ANTLR Grammars
+        - Dealing with Precedence, Left Recursion, and Associativity
+        - Recognizing Common Lexical Structures
+        - Drawing the Line Between Lexer and Parser
+    - Exploring Some Real Grammars
+        - Parsing Comma-Separated Values
+        - Parsing JSON
+        - Parsing DOT
+        - Parsing Cymbol
+        - Parsing R
+    - Decoupling Grammars and Application-Specific Code
+        - Evolving from Embedded Actions to Listeners
+        - Implementing Applications with Parse Tree Listeners
+        - Implementing Applications with Visitors
+        - Labeling Rule Alternatives for Precise Event Methods
+        - Sharing Information among Event Methods
+    - Building Some Real Language Applications
+        - Loading CSV Data
+        - Translating JSON to XML
+        - Generating a Call Graph
+        - Validating Program Symbol Usage
+    - Error Reporting and Recovery
+        - A Parade of Errors
+        - Altering and redirecting ANTLR Error Messages
+        - Automatic Error Recovery Strategy
+        - Error Alternatives
+        - Altering ANTLR’s Error Handling Strategy
+- Advanced topics
+    - Attributes and Actions
+        - Building a Calculator with Grammar Actions
+        - Accessing Token and Rule Attributes
+        - Recognizing Languages whose Keywords Aren’t Fixed
+    - Altering the Parse with Semantic Predicates
+        - Recognizing Multiple Language Dialects
+        - Deactivating Tokens
+        - Recognizing Ambiguous Phrases
+        - The Fine Print
+    - Wielding Lexical Black Magic
+        - Broadcasting Tokens on Different Channels
+        - Context-Sensitive Lexical Problems
+        - Islands in the Stream excerpt
+        - Parsing and Lexing XML
+        - Suggestions for building language applications
+- ANTLR Reference
+    - Exploring the runtime API
+        - Library Package Overview
+        - Recognizers
+        - Input Streams of Characters and Tokens
+        - Tokens and Token Factories
+        - Parse Trees
+        - Errors Listeners and Strategies
+    - ANTLR Reference
+    - Removing Direct Left-Recursion
+        - Direct Left-Recursive Alternative Patterns
+        - Left-Recursive Rule Transformations
