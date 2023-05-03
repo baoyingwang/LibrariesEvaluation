@@ -1,10 +1,4 @@
-import sys
-import os
 from antlr4 import *
-dir_path = os.path.dirname(os.path.realpath(__file__))
-#sys.path.insert(0, f"../output")
-sys.path.insert(0, f"{dir_path}/output")
-
 from ExGlobalVarLexer import ExGlobalVarLexer
 
 # parse the g4 to python target firstly, by parsh.sh (antlr4 -Dlanguage=Python3 -o output ex_global_var_combined.g4)

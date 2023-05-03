@@ -13,6 +13,7 @@ if [[ ! -f "${antlr4_complete_jar}" ]]; then
 fi
 
 # split the source code and generated python files(.antlr;output;output_py)
+# https://realpython.com/lessons/module-search-path/#description
 export PYTHONPATH=".antlr;output;output_py"
 
 # https://blog.knoldus.com/testing-grammar-using-antlr4-testrig-grun/
