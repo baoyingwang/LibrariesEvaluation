@@ -17,7 +17,35 @@ those subtrees don’t get visited.
 ```
 
 # action - attribute references is supported in parser, but not supported in lexer
-- for the parser example, see tour/Rows.g4 of https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/f_0029.xhtml#sec.actions-during-parse
+- for the parser example, see tour/Rows.g4(copied below) of the definitive antlr4
+```
+// from https://learning.oreilly.com/library/view/the-definitive-antlr/9781941222621/f_0029.xhtml#sec.actions-during-parse
+grammar Rows;
+
+@parser::members { // add members to generated RowsParser
+    int col;
+    public RowsParser(TokenStream input, int col) { // custom constructor
+        this(input);
+        this.col = col;
+    }
+}
+
+file: (row NL)+ ;
+
+row
+locals [int i=0]
+    : (   STUFF
+          {
+          $i++;
+          if ( $i == col ) System.out.println($STUFF.text);
+          }
+      )+
+    ;
+
+TAB  :  '\t' -> skip ;   // match but don't pass to the parser
+NL   :  '\r'? '\n' ;     // match and pass to the parser
+STUFF:  ~[\t\r\n]+ ;     // match any chars except tab, newline
+```
 - for the failure with lexer, see below
 ```
 FAREAST+baoywang@baoywang-homepc MINGW64 ~/OneDrive - Microsoft/ws/github/LibrariesEvaluation/eval-antlr/example_global_var (master) 17:05 03/05/2023

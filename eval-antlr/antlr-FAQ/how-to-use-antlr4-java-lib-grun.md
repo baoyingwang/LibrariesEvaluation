@@ -1,6 +1,10 @@
 # Introduction
 Antlr4 is based on java. We can use the related lib directly with jdk
 
+- antlr4 Data.g4 -o output
+- javac -d output -cp "${antlr4_complete_jar};.;./output" output/*java *java
+- grun  Data file -tree < t.data
+
 # how to setup
 I setup below alias
 ```
@@ -12,22 +16,8 @@ alias grun="java -cp \"${antlr4_complete_jar};.;./.antlr;./output\" org.antlr.v4
 ```
 
 # how to use 
-
-## generate token/tree/GUI
-```
-$ grun
-java org.antlr.v4.gui.TestRig GrammarName startRuleName
-  [-tokens] [-tree] [-gui] [-ps file.ps] [-encoding encodingname]
-  [-trace] [-diagnostics] [-SLL]
-  [input-filename(s)]
-Use startRuleName='tokens' if GrammarName is a lexer grammar.
-Omitting input-filename makes rig read from stdin.
-
-e.g. grun ExJavaAction entry -tokens "input.txt"
-```
-
 # compile the g4 to target language for later program
-- specify the target language(default Java): -Dlanguage=Python3  
+- specify the target language(default Java): -Dlanguage=Python3
   - refer: https://stackoverflow.com/questions/73070369/how-do-i-install-antlr4-for-python3-on-windows
 
 ```
@@ -62,3 +52,17 @@ e.g.
 cd example_global_var
 antlr4j "ExGlobalVarLexer.g4"  -o "output" -Dlanguage=Python3 
 ```
+
+## generate token/tree/GUI
+```
+$ grun
+java org.antlr.v4.gui.TestRig GrammarName startRuleName
+  [-tokens] [-tree] [-gui] [-ps file.ps] [-encoding encodingname]
+  [-trace] [-diagnostics] [-SLL]
+  [input-filename(s)]
+Use startRuleName='tokens' if GrammarName is a lexer grammar.
+Omitting input-filename makes rig read from stdin.
+
+e.g. grun ExJavaAction entry -tokens "input.txt"
+```
+

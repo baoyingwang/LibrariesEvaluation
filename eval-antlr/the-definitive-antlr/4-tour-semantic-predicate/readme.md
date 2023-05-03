@@ -1,0 +1,4 @@
+- antlr4 Data.g4 -o output
+- javac -d output -cp "${antlr4_complete_jar};.;./output" output/*java *java
+- grun  Data file -tree < t.data
+  - note: not support to use python antlr4-parse because the Data.g4 action is Java related
