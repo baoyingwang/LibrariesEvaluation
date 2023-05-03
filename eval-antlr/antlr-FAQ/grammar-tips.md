@@ -75,3 +75,62 @@ ACL_NUM
   }
 ;
 ```
+
+# mode - refer "Island Grammars: Dealing with Different Formats in the Same File" - chapter 4 "the definitive antlr4" 2nd
+- the example of tour/XMLLexer.g4
+# "Rewriting the Input Stream" - chapter 4 "the definitive antlr4" 2nd
+- tour/InsertSerialIDListener.java
+- "TokenStreamRewriter is a powerful and extremely efficient means of manipulating a token stream."
+
+# skip and channel hidden
+- channel(HIDDEN) can be processed later, but skip is discarded completely
+    - see below "for channel(HIDDEN), how can I access them later?"
+- how chatgpt explains it
+  - In antlr4 lexer, what does 'channel ( HIDDEN )' mean?
+  - so, looks like similar with "-> skip"
+  - for channel(HIDDEN), how can I access them later?
+```
+In antlr4 lexer, what does 'channel ( HIDDEN )' mean
+ChatGPT
+In ANTLR4, the channel(HIDDEN) lexer rule attribute is used to specify that certain tokens should be skipped by the parser and not included in the parse tree.
+When you specify channel(HIDDEN) in a lexer rule, it tells ANTLR4 to assign the matching tokens to a special channel called the "hidden channel". This channel is separate from the default channel that is used for regular tokens.
+By default, the parser ignores all tokens on the hidden channel and does not include them in the parse tree. This can be useful for ignoring whitespace, comments, or other tokens that are not relevant to the meaning of the input.
+For example, suppose you have a lexer rule for whitespace:
+
+cssCopy code
+WS : [ \t\r\n]+ -> channel(HIDDEN) ;
+This rule matches any sequence of whitespace characters and assigns the matching tokens to the hidden channel. The -> channel(HIDDEN) syntax specifies that the matched tokens should be sent to the hidden channel rather than the default channel.
+When the parser encounters whitespace in the input, it will ignore the whitespace tokens on the hidden channel and continue parsing with the remaining tokens on the default channel. This can simplify the parser logic and make the parse tree more compact.
+In summary, the channel(HIDDEN) lexer rule attribute is used to specify that certain tokens should be skipped by the parser and not included in the parse tree. This can be useful for ignoring whitespace, comments, or other tokens that are not relevant to the meaning of the input.
+
+so, looks like similar with "-> skip"
+ChatGPT
+Yes, the channel(HIDDEN) lexer rule attribute is similar in functionality to the -> skip lexer rule action.
+When you use -> skip in a lexer rule, it tells ANTLR4 to skip the matching tokens and not create any tokens for them. This is similar to assigning the matching tokens to the hidden channel, because both techniques result in the tokens being skipped by the parser and not included in the parse tree.
+The main difference between channel(HIDDEN) and -> skip is that channel(HIDDEN) allows you to assign the matching tokens to a separate channel, whereas -> skip simply discards the matching tokens without assigning them to any channel.
+In general, you should use channel(HIDDEN) when you want to skip tokens that may be relevant to other parts of your application, such as code generators or syntax highlighters. By assigning the tokens to the hidden channel, you can still access them later if necessary. On the other hand, you should use -> skip when you want to completely discard the matching tokens and never use them again.
+
+for channel(HIDDEN), how can I access them later?
+ChatGPT
+
+To access the tokens that have been assigned to the hidden channel in ANTLR4, you can use a custom listener or visitor that listens to all token events, including those on the hidden channel.
+The TokenStream interface in ANTLR4 provides a method called getTokenSource(), which returns the TokenSource object used to generate the tokens. You can use the TokenSource object to retrieve all tokens from the input, including those on the hidden channel.
+Here's an example of how you can access the tokens on the hidden channel in a custom listener:
+
+javaCopy code
+public class MyListener extends MyGrammarBaseListener
+{ 
+    @OverridepublicvoidvisitTerminal(TerminalNode node)
+    { 
+        Tokentoken=node.getSymbol(); 
+        if(token.getChannel() == Lexer.HIDDEN) 
+        { 
+            // Do something with the hidden token
+        } 
+        // Process regular tokens as usual} 
+    }
+In this example, the visitTerminal() method is called for every terminal node in the parse tree, including those on the hidden channel. We can retrieve the Token object associated with the terminal node using the getSymbol() method. If the token was assigned to the hidden channel, we can check its channel number using the getChannel() method. If the channel number matches Lexer.HIDDEN, then we know that the token was on the hidden channel.
+You can modify this example to perform any custom processing you need on the hidden tokens. Note that if you are using multiple channels in your lexer, you may need to modify the if statement to match the channel number of your hidden channel.
+
+From <https://chat.openai.com/c/3d601309-43f9-4ee6-98cf-4cd452602811> 
+```
