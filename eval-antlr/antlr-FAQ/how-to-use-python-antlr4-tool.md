@@ -12,10 +12,12 @@ python has related binary
 # install lib for script if you need it
 pip install antlr4-python3-runtime
 
-# Example to generate target lang for program
-antlr4 -Dlanguage=Python3 -o output ex_global_var_lexer.g4
+# generate target lang for program
+- antlr4 -Dlanguage=Python3 -o output ex_global_var_lexer.g4
+- antlr4 -Dlanguage=Python3 -no-listener -visitor -o output ex_global_var_lexer.g4
+  - visitor, rather than listener
 
-# Examples to generate tokens/tree/GUI by antlr4-parse(python tool) for quich check
+# generate tokens/tree/GUI by antlr4-parse(python tool) for quich check
 below is the basic usage
 ```
 $ which antlr4-parse
