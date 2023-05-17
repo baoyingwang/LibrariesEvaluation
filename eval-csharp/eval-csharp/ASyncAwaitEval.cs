@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace eval_csharp
 {
@@ -240,6 +241,78 @@ namespace eval_csharp
                 //注意，函数返回类型为Task<int>, 但是我们这里要返回int
                 return length;
             }
+        }
+
+        [Test]
+        public void TestAwaitBasic()
+        {
+            //   Standard Output: 
+            // 2023.05.17 11:56:40:712 TestAwaitBasic - enter in thread 13 and no task
+            // 2023.05.17 11:56:40:715 LoopAsyncWaitTaskExecution - enter. in thread 13 and no task
+            // 2023.05.17 11:56:40:715 each [0] LoopAsyncWaitTaskExecution - enter. More:0 in thread 13 and no task
+            // 2023.05.17 11:56:40:716 TaskExecution15Seconds - enter. More:0 in thread 13 and no task
+            // 2023.05.17 11:56:40:716 TaskExecution15Seconds - leave. More:0 in thread 13 and no task
+            // 2023.05.17 11:56:40:716 MethodExecution15Seconds - enter. More:0 in thread 11 and task 1
+            // 2023.05.17 11:56:55:719 MethodExecution15Seconds - leave. More:0 in thread 11 and task 1
+            // 2023.05.17 11:56:55:720 each [0] LoopAsyncWaitTaskExecution - leave. More:0 in thread 11 and no task
+            // 2023.05.17 11:56:55:720 each [1] LoopAsyncWaitTaskExecution - enter. More:1 in thread 11 and no task
+            // 2023.05.17 11:56:55:720 TaskExecution15Seconds - enter. More:1 in thread 11 and no task
+            // 2023.05.17 11:56:55:720 TaskExecution15Seconds - leave. More:1 in thread 11 and no task
+            // 2023.05.17 11:56:55:720 MethodExecution15Seconds - enter. More:1 in thread 14 and task 2
+            // 2023.05.17 11:57:10:721 MethodExecution15Seconds - leave. More:1 in thread 14 and task 2
+            // 2023.05.17 11:57:10:722 each [1] LoopAsyncWaitTaskExecution - leave. More:1 in thread 14 and no task
+            // 2023.05.17 11:57:10:722 each [2] LoopAsyncWaitTaskExecution - enter. More:2 in thread 14 and no task
+            // 2023.05.17 11:57:10:722 TaskExecution15Seconds - enter. More:2 in thread 14 and no task
+            // 2023.05.17 11:57:10:723 TaskExecution15Seconds - leave. More:2 in thread 14 and no task
+            // 2023.05.17 11:57:10:723 MethodExecution15Seconds - enter. More:2 in thread 11 and task 3
+            // 2023.05.17 11:57:25:738 MethodExecution15Seconds - leave. More:2 in thread 11 and task 3
+            // 2023.05.17 11:57:25:738 each [2] LoopAsyncWaitTaskExecution - leave. More:2 in thread 11 and no task
+            // 2023.05.17 11:57:25:738 LoopAsyncWaitTaskExecution - leave. in thread 11 and no task
+            // 2023.05.17 11:57:25:739 TestAwaitBasic - leave in thread 13 and no task
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(TestAwaitBasic)} - enter");
+            
+            var t = LoopAsyncWaitTaskExecution();
+            t.GetAwaiter().GetResult();
+
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(TestAwaitBasic)} - leave");
+        }
+
+        static async Task<int> LoopAsyncWaitTaskExecution()
+        {
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(LoopAsyncWaitTaskExecution)} - enter.");
+            for (int i = 0; i < 3; i++)
+            {
+                ThreadEval_Util.TraceThreadAndTask($"each [{i}] {nameof(LoopAsyncWaitTaskExecution)} - enter. More:{i}");
+                await TaskExecution15Seconds($"{i}").ConfigureAwait(false);
+                ThreadEval_Util.TraceThreadAndTask($"each [{i}] {nameof(LoopAsyncWaitTaskExecution)} - leave. More:{i}");
+            }
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(LoopAsyncWaitTaskExecution)} - leave.");
+
+            return 0;
+        }
+
+        static Task<int> TaskExecution15Seconds(string message)
+        {
+            
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(TaskExecution15Seconds)} - enter. More:{message}");
+            
+            Task<int> result = Task.Run<int>(() =>
+            {
+                return MethodExecution15Seconds(message);
+            });
+
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(TaskExecution15Seconds)} - leave. More:{message}");
+
+            return result;
+        }
+
+        // simulation a external call
+        static int MethodExecution15Seconds(string message)
+        {
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(MethodExecution15Seconds)} - enter. More:{message}");
+            Thread.Sleep(15 * 1000);
+            ThreadEval_Util.TraceThreadAndTask($"{nameof(MethodExecution15Seconds)} - leave. More:{message}");
+            return 0;
         }
 
         [Test]
